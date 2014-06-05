@@ -1,0 +1,12 @@
+#!/bin/zsh
+user=
+password=
+dir=www/ #Local directory to send
+host=dev.raspberrystem.com
+target=./$host/wphidden42 #Where to put it
+full=$(readlink -f $0)
+full=$(dirname $full)
+cd $full
+touch ./uploading
+ncftpput -u $user -p $password -R $host $target $dir/*
+rm ./uploading

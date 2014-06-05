@@ -1,0 +1,11 @@
+#!/bin/sh
+full=$(readlink -f $0)
+full=$(dirname $full)
+echo "SSH Password"
+read password
+echo "MySQL Login"
+read sqll
+echo "MySQL Password"
+read sqlp
+cd $full
+sshpass -p "$password" ssh rstem "mysqldump -h mysql.raspberrystem.com -u $mysqll -p$mysqlp raspberrystem_com" | gzip -9 > ./sqlbackup.gz

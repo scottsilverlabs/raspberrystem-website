@@ -1,0 +1,14 @@
+#!/bin/zsh
+user=
+password=
+dir=www/ #Local directory to send
+host=raspberrystem.com
+full=$(readlink -f $0)
+full=$(dirname $full)
+cd $full
+cp -r $dir ./tmp
+sed -i "s/wptesting_rstem/raspberrystem_com/" ./tmp/wp-config.php #Change to the correct database
+touch ./uploading
+ncftpput -u $user -p $password -R $host $host tmp/*
+rm ./uploading
+rm -rf ./tmp
