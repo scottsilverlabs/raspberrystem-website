@@ -15,8 +15,8 @@ header += " .descout {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transitio
 header += " .descin {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;-o-transition:0.5s;transition:0.5s;height:0px;padding-bottom:0px;padding-top:0px;}";
 header += " .tableentry:hover {background-color:#eee;}</style>";
 header += "<div class=\"tablesearch\" style=\"display:inline;width:100%;text-align:center;white-space:nowrap;\">";
-header += "<input id=\"tablesearchbar\" style=\"width:90%;overflow-x:auto;overflow-y:hidden;display:inline;\" class=\"headerbutton\" type=\"text\" value=\"Search\" onkeyup=\"nameSearch(event, this.value)\"></input>";
-header += "<input style=\""+headerStyle.substring(10)+"width:10%;\" class=\"headerbutton\" type=\"button\" value=\"Advanced\" onclick=\"toggleadv()\"></input>";
+header += "<input id=\"tablesearchbar\" style=\"width:90%;overflow-x:auto;overflow-y:hidden;display:inline;\" class=\"headerbutton\" type=\"text\" value=\"\" placeholder=\"Search\" onkeyup=\"nameSearch(event, this.value)\"></input>"; //Put in the expander
+header += "<input style=\""+headerStyle.substring(10)+"width:10%;\" class=\"headerbutton\" type=\"button\" value=\"Filter\" onclick=\"toggleadv()\"></input>"; //TODO align with projects
 header += "<br/><div id=\"advsearch\" class=\"in\" style=\"width:100%;overflow:hidden;display:inline-flex;\"></div>";
 header += "</div><br>";
 header += "<div class=\"tableheader\" style=\"display:inline;width:100%;text-align:center;white-space:nowrap;\">";
@@ -266,14 +266,11 @@ function valid(tab) {
 
 //Function called by the search bar onKeyUp and (hackily) used to force an update by the toggle methods(Except toggleDesc) and change* functions.
 function nameSearch(key, text) {
-	if (text == "Search") {
-		text = "";
-	}
 	char = String.fromCharCode(key.keyCode);
 	if (char.length == 1) {
 		var newMatched = [];
 		for (var i in posts) {
-			if ((posts[i].name.toLowerCase().substring(0, text.length) == text.toLowerCase() || posts[i].category.toLowerCase().substring(0, text.length) == text.toLowerCase()) && valid(posts[i])) {
+			if ((posts[i].name.toLowerCase().indexOf(text.toLowerCase()) != -1 || posts[i].category.toLowerCase().substring(0, text.length) == text.toLowerCase()) && valid(posts[i])) {
 				newMatched.push(posts[i]);
 			}
 		} 
