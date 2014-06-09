@@ -32,6 +32,7 @@ headers[headers.length-1].style.display = "inline"; //In reality there should on
 var categories = {};
 var lids = {};
 var cells = {};
+var difficulty = [];
 for (var i in posts) {
 	var ele = posts[i];
 	posts[i].category = posts[i].category.substring(1, posts[i].category.length-1); //Cut out a whitespace.
@@ -56,30 +57,45 @@ for (var i in posts) {
 }
 
 //TODO Check/uncheck all
-var searchStyle = "display:inline;width:20%;margin:1em;";
+var searchStyle = "display:inline;width:20%;margin:1em;text-align:right;white-space:nowrap;overflow-y:auto;overflow-x:hidden;";
 var asearch = "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
 asearch += "<h1 style=\"text-align:center;\">Name</h1><br/>";
-asearch += "<div class=\"textboxwrapper\" style=\"width:100\"><input id=\"tablesearchbar\" style=\"width:100%;max-height:1em;overflow-x:auto;overflow-y:hidden;display:inline;\" class=\"headerbutton\" type=\"text\" value=\"\" placeholder=\"Search\" onkeyup=\"nameSearch(event, this.value)\"/></div></div>";
+asearch += "<div class=\"textboxwrapper\" style=\"width:100\"><input id=\"tablesearchbar\" style=\"float:left;width:91%;max-height:1em;overflow-x:auto;overflow-y:hidden;display:inline;\" class=\"headerbutton\" type=\"text\" value=\"\" placeholder=\"Search\" onkeyup=\"nameSearch(event, this.value)\"/></div></div>";
 
+//Difficulty
+asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
+asearch += "<h1 style=\"text-align:center;\">Difficulty</h1><br/>";
+difficulty.push(null); //Difficulty starts at one, the array starts at 0, so this pads everything out.
+for (var i = 1; i <= 5; i++) {
+	difficulty.push(true);
+	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"float:left;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleDifficulty('"+i+"')\"/></div><br/>";
+}
+asearch += "</div>";
+
+//Categories
 asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
 asearch += "<h1 style=\"text-align:center;\">Categories</h1><br/>";
 for (var i in categories) {
 	var category = categories[i];
-	asearch += "<label style=\"float:left\">"+i+"</label><input type=\"checkbox\" style=\"float:right;\" class=\"categorybox\" checked=\"true\" onclick=\"toggleCategory('"+i+"')\"/><br/>";
+	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"float:left;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleCategory('"+i+"')\"/></div><br/>";
 }
 asearch += "</div>";
+
+//Cells
 asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
 asearch += "<h1 style=\"text-align:center;\">Cells</h1><br/>";
 for (var i in cells) {
 	var cell = cells[i];
-	asearch += "<label style=\"float:left;\">"+i+"</label><input type=\"checkbox\" style=\"float:right;\" class=\"categorybox\" checked=\"true\" style=\"width:3em;\" onchange=\"toggleCell('"+i+"')\"/><br/>";
+	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"float:left;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input type=\"checkbox\" class=\"categorybox\" checked=\"true\" onchange=\"toggleCell('"+i+"')\"/></div><br/>";
 }
+
+//Lids
 asearch += "</div>";
 asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
 asearch += "<h1 style=\"text-align:center;\">Lids</h1><br/>";
 for (var i in lids) {
 	var lid = lids[i];
-	asearch += "<label style=\"float:left;\">"+i+"</label><input type=\"checkbox\" style=\"float:right;\" class=\"categorybox\" checked=\"true\" onclick=\"toggleLid('"+i+"')\"/><br/>";
+	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"float:left;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleLid('"+i+"')\"/></div><br/>";
 }
 asearch += "</div>";
 advsearch.innerHTML += asearch;
@@ -262,8 +278,9 @@ function valid(tab) {
 	for (var i in tab.cells) {
 		good = good && cells[i];
 	}
-	good = good && (lids[tab.lid]);
-	good = good && (categories[tab.category]);
+	good = good && lids[tab.lid];
+	good = good && categories[tab.category];
+	good = good && difficulty[Math.floor(tab.difficulty + 0.5)];
 	return good;
 }
 
@@ -301,6 +318,10 @@ function toggleLid(name) {
 	nameSearch({"key": " "}, bar.value);
 }
 
+function toggleDifficulty(num) {
+	difficulty[num] = !difficulty[num];
+	nameSearch({"key": " "}, bar.value);
+}
 //Called by the categories checkboxes on click
 function toggleCategory(name) {
 	categories[name] = !categories[name];
