@@ -11,7 +11,7 @@ var matchedPosts = posts.slice(0); //Used for sorting searches.
 var headerStyle = "width:16.66%;display:inline;";
 var content = document.getElementById("content").firstElementChild.firstElementChild;
 content.firstElementChild.innerHTML += "("+posts.length+")";
-content.innerHTML += "<input style=\""+headerStyle.substring(10)+"width:10%;display:inline-flex;float:right;\" class=\"headerbutton\" type=\"button\" value=\"Filter\" onclick=\"toggleadv()\"/>";
+content.innerHTML += "<input style=\""+headerStyle.substring(13)+"display:inline-flex;float:right;\" class=\"headerbutton\" type=\"button\" value=\"Filter\" onclick=\"toggleadv()\"/>";
 content.innerHTML += "<select style=\"display:inline-flex;float:right;\" onChange=\"setPageLength(this.value)\"><option>10</option><option>25</option><option>50</option></select>";
 content.innerHTML += "<div id=\"projectTable\" class=\"tableheader\"></div>";
 var table = document.getElementById("projectTable");
@@ -19,7 +19,8 @@ var header = "<style> .out {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-tra
 header += " .in {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;-o-transition:0.5s;transition:0.5s;height:0px;}";
 header += " .descout {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;-o-transition:0.5s;transition:0.5s;height:100%;padding-bottom:1em;padding-top:1em;}";
 header += " .descin {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;-o-transition:0.5s;transition:0.5s;height:0px;padding-bottom:0px;padding-top:0px;}";
-header += " .tableentry:hover {background-color:#eee;}</style>";
+header += " .down {-webkit-transform:rotate(180deg);-moz-transform:rotate(180deg);-ms-transform:rotate(180deg)}";
+header += " .up {-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg)}</style>";
 header += "<div id=\"advsearch\" class=\"in\" style=\"width:100%;overflow:hidden;display:inline-flex;\"></div>";
 header += "<div class=\"tableheader\" style=\"display:inline;width:100%;text-align:center;white-space:nowrap;\">";
 header += "<input style=\""+headerStyle+"\" class=\"headerbutton\" type=\"button\" value=\"Name\" onclick=\"psort('name')\"></input>";
@@ -109,17 +110,18 @@ advsearch.innerHTML += asearch;
 var bar = document.getElementById("tablesearchbar");
 
 //Makes the divs holding specific projects, optionsDict being one of posts' members.
-var textHolderStyle = "width:16.66%;overflow-x:auto;overflow-y:hidden;max-height:inherit;text-align:inherit;";
+var textHolderStyle = "width:"+(100/6)+"%;overflow-x:auto;overflow-y:hidden;max-height:inherit;text-align:inherit;";
+var circleStyle = "float:right;width:1em;height:1em;border-radius:100%;background-color:#aaa;transition:1s;vertical-align:middle;";
 function generateEntry(optionsDict) {
 	var id = optionsDict.name.replace(/ /g, "-");
-	var html = "<div id=\""+id+"\" class=\"tableentry\" onclick=\"toggleDesc(event, this.id+'Desc')\" style=\"display:inline-flex;width:100%;min-height:1.3em;max-height:3.2em;text-align:left;overflow:hidden;\">";
+	var html = "<div id=\""+id+"\" class=\"tableentry\" onclick=\"toggleDesc(event, this.id+'Desc', this)\" style=\"display:inline-flex;width:100%;min-height:1.3em;max-height:3.2em;text-align:left;overflow:hidden;\">";
 	html += "<div class=\"tabletext pname\" style=\""+textHolderStyle+"\"><a href=\""+optionsDict.url+"\">"+optionsDict.name+"</a></div>";
 	html += "<div class=\"tabletext pdiff\" style=\""+textHolderStyle+"\">"+optionsDict.difficulty+"</div>";
 	html += "<div class=\"tabletext pdiff\" style=\""+textHolderStyle+"\">TODO</div>";
 	html += "<div class=\"tabletext pcategory\" style=\""+textHolderStyle+"\">"+optionsDict.category+"</div>";
 	html += "<div class=\"tabletext pcells\" style=\""+textHolderStyle+";\">TODO</div>";
-	html += "<div class=\"tabletext plid\" style=\""+textHolderStyle+"\">"+optionsDict.lid+"</div>";
-	html += "</div>";
+	html += "<div class=\"tabletext plid\" style=\""+textHolderStyle+"\">"+optionsDict.lid;
+	html += "<div class=\"tablespinner down\" style=\""+circleStyle+"\"><span style=\"vertical-align:middle;position:relative;top:-17%;\">▲</span></div></div></div>";
 	if (optionsDict.description) {
 		html += "<div id=\""+id+"Desc\" class=\"tabledesc descin\" onclick=\"toggleDesc(this.id)\" style=\"display:inline-flex;width:100%;overflow:hidden;padding-left:2em;padding-right:2em;max-height:100%;min-height:0px\">";
 		html += optionsDict.description;
@@ -350,15 +352,19 @@ function setPageLength(len) {
 
 //Expand descriptions
 var last;
-function toggleDesc(event, id) {
+function toggleDesc(event, id, orig) {
 	var cur = document.getElementById(id);
 	if (cur && !event.target.href) {
 		if (last != id) {
 			cur.classList.remove("descin");
 			cur.classList.add("descout");
+			orig.lastChild.lastChild.classList.remove("down");
+			orig.lastChild.lastChild.classList.add("up");
 		} else { //Ugly, but this fixing a minor toggling issue.
 			cur.classList.remove("descout");
 			cur.classList.add("descin");
+			orig.lastChild.lastChild.classList.remove("up");
+			orig.lastChild.lastChild.classList.add("down");
 			last = undefined;
 			return;
 		}
@@ -367,6 +373,8 @@ function toggleDesc(event, id) {
 			if (old) {
 				old.classList.remove("descout");
 				old.classList.add("descin");
+				old.lastChild.lastChild.classList.remove("up");
+				old.lastChild.lastChild.classList.add("down");
 			}
 		}
 		last = id;
