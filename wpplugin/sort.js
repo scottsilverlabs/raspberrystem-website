@@ -6,19 +6,15 @@
 var sortedPosts = [];
 var matchedPosts = posts.slice(0); //Used for sorting searches.
 
-document.getElementById("content").firstElementChild.firstElementChild.innerHTML += "<div id=\"projectTable\" class=\"tableheader\"></div>";
-var table = document.getElementById("projectTable");
 var headerStyle = "width:20%;display:inline;";
+document.getElementById("content").firstElementChild.firstElementChild.innerHTML += "<input style=\""+headerStyle.substring(10)+"width:10%;display:inline-flex;float:right;\" class=\"headerbutton\" type=\"button\" value=\"Filter\" onclick=\"toggleadv()\"/><div id=\"projectTable\" class=\"tableheader\"></div>";
+var table = document.getElementById("projectTable");
 var header = "<style> .out {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;-o-transition:0.5s;transition: .5s;height:300px;}";
 header += " .in {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;-o-transition:0.5s;transition:0.5s;height:0px;}";
 header += " .descout {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;-o-transition:0.5s;transition:0.5s;height:100%;padding-bottom:1em;padding-top:1em;}";
 header += " .descin {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;-o-transition:0.5s;transition:0.5s;height:0px;padding-bottom:0px;padding-top:0px;}";
 header += " .tableentry:hover {background-color:#eee;}</style>";
-header += "<div class=\"tablesearch\" style=\"display:inline;width:100%;text-align:center;white-space:nowrap;\">";
-header += "<input id=\"tablesearchbar\" style=\"width:90%;overflow-x:auto;overflow-y:hidden;display:inline;\" class=\"headerbutton\" type=\"text\" value=\"\" placeholder=\"Search\" onkeyup=\"nameSearch(event, this.value)\"></input>"; //Put in the expander
-header += "<input style=\""+headerStyle.substring(10)+"width:10%;\" class=\"headerbutton\" type=\"button\" value=\"Filter\" onclick=\"toggleadv()\"></input>"; //TODO align with projects
-header += "<br/><div id=\"advsearch\" class=\"in\" style=\"width:100%;overflow:hidden;display:inline-flex;\"></div>";
-header += "</div><br>";
+header += "<div id=\"advsearch\" class=\"in\" style=\"width:100%;overflow:hidden;display:inline-flex;\"></div>";
 header += "<div class=\"tableheader\" style=\"display:inline;width:100%;text-align:center;white-space:nowrap;\">";
 header += "<input style=\""+headerStyle+"\" class=\"headerbutton\" type=\"button\" value=\"Name\" onclick=\"psort('name')\"></input>";
 header += "<input style=\""+headerStyle+"\" class=\"headerbutton\" type=\"button\" value=\"Difficulty\" onclick=\"psort('difficulty')\"></input>";
@@ -30,7 +26,8 @@ header += "<div id=\"entryTable\" class=\"tableheader\" style=\"width:100%;\"></
 table.innerHTML += header;
 var etable = document.getElementById("entryTable");
 var advsearch = document.getElementById("advsearch");
-var bar = document.getElementById("tablesearchbar");
+var headers = document.getElementsByClassName("entry-title");
+headers[headers.length-1].style.display = "inline"; //In reality there should only be one element in the array
 //Setup posts array and searching arrays
 var categories = {};
 var lids = {};
@@ -49,7 +46,7 @@ for (var i in posts) {
 	for (var j in allsplit) {
 		num = allsplit[j].split(" ")[0];
 		name = allsplit[j].substring(num.length+1);
-		cells[name] = -1;
+		cells[name] = true;
 		num = parseInt(num);
 		ele.cells[name] = num;
 		ele.cellcount += num;
@@ -58,32 +55,38 @@ for (var i in posts) {
 	lids[ele.lid] = true;
 }
 
-var searchStyle = "display:inline;width:33%;overflow:auto;text-align:right;margin:1em;";
+//TODO Check/uncheck all
+var searchStyle = "display:inline;width:20%;margin:1em;";
 var asearch = "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
-asearch += "<h1 style=\"text-align:center;\">Categories</h1><br>";
+asearch += "<h1 style=\"text-align:center;\">Name</h1><br/>";
+asearch += "<div class=\"textboxwrapper\" style=\"width:100\"><input id=\"tablesearchbar\" style=\"width:100%;max-height:1em;overflow-x:auto;overflow-y:hidden;display:inline;\" class=\"headerbutton\" type=\"text\" value=\"\" placeholder=\"Search\" onkeyup=\"nameSearch(event, this.value)\"/></div></div>";
+
+asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
+asearch += "<h1 style=\"text-align:center;\">Categories</h1><br/>";
 for (var i in categories) {
 	var category = categories[i];
-	asearch += "<label style=\"float:left\">"+i+"</label><input type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleCategory('"+i+"')\" value=\""+i+"\"/><br/>";
+	asearch += "<label style=\"float:left\">"+i+"</label><input type=\"checkbox\" style=\"float:right;\" class=\"categorybox\" checked=\"true\" onclick=\"toggleCategory('"+i+"')\"/><br/>";
 }
 asearch += "</div>";
 asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
-asearch += "<h1 style=\"text-align:center;\">Cells</h1><br>";
+asearch += "<h1 style=\"text-align:center;\">Cells</h1><br/>";
 for (var i in cells) {
 	var cell = cells[i];
-	asearch += "<label style=\"float:left;\">"+i+"</label><input type=\"number\" class=\"categorybox\" style=\"width:3em;\" value=\"-1\" min=\"-1\" step=\"1\" onchange=\"changeCell('"+i+"', this.value)\"/><br/>";
+	asearch += "<label style=\"float:left;\">"+i+"</label><input type=\"checkbox\" style=\"float:right;\" class=\"categorybox\" checked=\"true\" style=\"width:3em;\" onchange=\"toggleCell('"+i+"')\"/><br/>";
 }
 asearch += "</div>";
 asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
-asearch += "<h1 style=\"text-align:center;\">Lids</h1><br>";
+asearch += "<h1 style=\"text-align:center;\">Lids</h1><br/>";
 for (var i in lids) {
 	var lid = lids[i];
-	asearch += "<label style=\"float:left;\">"+i+"</label><input type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleLid('"+i+"')\" value=\""+i+"\"/><br/>";
+	asearch += "<label style=\"float:left;\">"+i+"</label><input type=\"checkbox\" style=\"float:right;\" class=\"categorybox\" checked=\"true\" onclick=\"toggleLid('"+i+"')\"/><br/>";
 }
 asearch += "</div>";
-advsearch.innerHTML = asearch;
+advsearch.innerHTML += asearch;
+var bar = document.getElementById("tablesearchbar");
 
 //Makes the divs holding specific projects, optionsDict being one of posts' members.
-var textHolderStyle = "width:20%;white-space:nowrap;overflow-x:auto;overflow-y:hidden;max-height:inherit;text-align:inherit;";
+var textHolderStyle = "width:20%;overflow-x:auto;overflow-y:hidden;max-height:inherit;text-align:inherit;";
 function generateEntry(optionsDict) {
 	var id = optionsDict.name.replace(/ /g, "-");
 	var html = "<div id=\""+id+"\" class=\"tableentry\" onclick=\"toggleDesc(event, this.id+'Desc')\" style=\"display:inline-flex;width:100%;min-height:1.3em;max-height:2.8em;text-align:left;overflow:hidden;\">";
@@ -257,7 +260,7 @@ function psort(property) {
 function valid(tab) {
 	good = true;
 	for (var i in tab.cells) {
-		good = good && (tab.cells[i] <= cells[i] || cells[i] == -1);
+		good = good && cells[i];
 	}
 	good = good && (lids[tab.lid]);
 	good = good && (categories[tab.category]);
@@ -292,15 +295,21 @@ function nameSearch(key, text) {
 	}
 }
 
-//Called  by the lid checkboxes on click
+//Called by the lid checkboxes on click
 function toggleLid(name) {
 	lids[name] = !lids[name];
 	nameSearch({"key": " "}, bar.value);
 }
 
-//Called  by the categories checkboxes on click
+//Called by the categories checkboxes on click
 function toggleCategory(name) {
 	categories[name] = !categories[name];
+	nameSearch({"key": " "}, bar.value);
+}
+
+//Called by the cell checkboxes on click
+function toggleCell(name) {
+	cells[name] = !cells[name];
 	nameSearch({"key": " "}, bar.value);
 }
 
@@ -327,12 +336,6 @@ function toggleDesc(event, id) {
 		}
 		last = id;
 	}
-}
-
-//Called  by the cell number boxes
-function changeCell(name, value) {
-	cells[name] = value;
-	nameSearch({"key": " "}, bar.value);
 }
 
 //Called by the advanced search button
