@@ -1,13 +1,19 @@
 //Copyright 2014 Scott Silver Labs
 //TODO lid/cell pictures.
+//TODO user-defined page item number
+//TODO figure out database stuff
 
 //var posts = [{}, {}, ...{}]; Passed in by PHP
-//var pageLength = int; Also passed in by the PHP
+var pageLength = 10;
 var sortedPosts = [];
 var matchedPosts = posts.slice(0); //Used for sorting searches.
 
-var headerStyle = "width:20%;display:inline;";
-document.getElementById("content").firstElementChild.firstElementChild.innerHTML += "<input style=\""+headerStyle.substring(10)+"width:10%;display:inline-flex;float:right;\" class=\"headerbutton\" type=\"button\" value=\"Filter\" onclick=\"toggleadv()\"/><div id=\"projectTable\" class=\"tableheader\"></div>";
+var headerStyle = "width:16.66%;display:inline;";
+var content = document.getElementById("content").firstElementChild.firstElementChild;
+content.firstElementChild.innerHTML += "("+posts.length+")";
+content.innerHTML += "<input style=\""+headerStyle.substring(10)+"width:10%;display:inline-flex;float:right;\" class=\"headerbutton\" type=\"button\" value=\"Filter\" onclick=\"toggleadv()\"/>";
+content.innerHTML += "<select style=\"display:inline-flex;float:right;\" onChange=\"setPageLength(this.value)\"><option>10</option><option>25</option><option>50</option></select>";
+content.innerHTML += "<div id=\"projectTable\" class=\"tableheader\"></div>";
 var table = document.getElementById("projectTable");
 var header = "<style> .out {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;-o-transition:0.5s;transition: .5s;height:300px;}";
 header += " .in {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;-o-transition:0.5s;transition:0.5s;height:0px;}";
@@ -18,6 +24,7 @@ header += "<div id=\"advsearch\" class=\"in\" style=\"width:100%;overflow:hidden
 header += "<div class=\"tableheader\" style=\"display:inline;width:100%;text-align:center;white-space:nowrap;\">";
 header += "<input style=\""+headerStyle+"\" class=\"headerbutton\" type=\"button\" value=\"Name\" onclick=\"psort('name')\"></input>";
 header += "<input style=\""+headerStyle+"\" class=\"headerbutton\" type=\"button\" value=\"Difficulty\" onclick=\"psort('difficulty')\"></input>";
+header += "<input style=\""+headerStyle+"\" class=\"headerbutton\" type=\"button\" value=\"Rating\" onclick=\"psort('rating')\"></input>";
 header += "<input style=\""+headerStyle+"\" class=\"headerbutton\" type=\"button\" value=\"Category\" onclick=\"psort('category')\"></input>";
 header += "<input style=\""+headerStyle+"\" class=\"headerbutton\" type=\"button\" value=\"Cells\" onclick=\"psort('cellcount')\"></input>";
 header += "<input style=\""+headerStyle+"\" class=\"headerbutton\" type=\"button\" value=\"Lid\" onclick=\"psort('lid')\"></input>";
@@ -102,12 +109,13 @@ advsearch.innerHTML += asearch;
 var bar = document.getElementById("tablesearchbar");
 
 //Makes the divs holding specific projects, optionsDict being one of posts' members.
-var textHolderStyle = "width:20%;overflow-x:auto;overflow-y:hidden;max-height:inherit;text-align:inherit;";
+var textHolderStyle = "width:16.66%;overflow-x:auto;overflow-y:hidden;max-height:inherit;text-align:inherit;";
 function generateEntry(optionsDict) {
 	var id = optionsDict.name.replace(/ /g, "-");
-	var html = "<div id=\""+id+"\" class=\"tableentry\" onclick=\"toggleDesc(event, this.id+'Desc')\" style=\"display:inline-flex;width:100%;min-height:1.3em;max-height:2.8em;text-align:left;overflow:hidden;\">";
+	var html = "<div id=\""+id+"\" class=\"tableentry\" onclick=\"toggleDesc(event, this.id+'Desc')\" style=\"display:inline-flex;width:100%;min-height:1.3em;max-height:3.2em;text-align:left;overflow:hidden;\">";
 	html += "<div class=\"tabletext pname\" style=\""+textHolderStyle+"\"><a href=\""+optionsDict.url+"\">"+optionsDict.name+"</a></div>";
 	html += "<div class=\"tabletext pdiff\" style=\""+textHolderStyle+"\">"+optionsDict.difficulty+"</div>";
+	html += "<div class=\"tabletext pdiff\" style=\""+textHolderStyle+"\">TODO</div>";
 	html += "<div class=\"tabletext pcategory\" style=\""+textHolderStyle+"\">"+optionsDict.category+"</div>";
 	html += "<div class=\"tabletext pcells\" style=\""+textHolderStyle+";\">TODO</div>";
 	html += "<div class=\"tabletext plid\" style=\""+textHolderStyle+"\">"+optionsDict.lid+"</div>";
@@ -331,6 +339,12 @@ function toggleCategory(name) {
 //Called by the cell checkboxes on click
 function toggleCell(name) {
 	cells[name] = !cells[name];
+	nameSearch({"key": " "}, bar.value);
+}
+
+//Called by the dropdown menu
+function setPageLength(len) {
+	pageLength = parseInt(len);
 	nameSearch({"key": " "}, bar.value);
 }
 

@@ -44,14 +44,13 @@ EOT;
 					"description" => $descActual
 				]);
 			}
-			return "<script type=\"text/javascript\"> var posts = " . json_encode($arr) . "; var pageLength = " . get_option("pi_perpage", 20) . ";" . $javascript . "</script>";
+			return "<script type=\"text/javascript\"> var posts = " . json_encode($arr) . $javascript . "</script>";
 		}
 		return $content;
 	}
 
 	function pi_options_actual() {
 		$ptitle = get_option("pi_parenttitle", "Projects");
-		$pages = get_option("pi_perpage", 20);
 	    ?>
 	    <div class="wrap">
 	        <h2>Project Indexer</h2>
@@ -64,9 +63,6 @@ EOT;
 	                <tr valign="top"><th scope="row">Projects' Parent Title:</th>
 	                    <td><input type="text" name="pi_parenttitle" value="<?php echo $ptitle; ?>" /></td>
 	                </tr>
-	                <tr valign="top"><th scope="row">Projects Per Page:</th>
-	                    <td><input type="number" name="pi_perpage" value="<?php echo $pages; ?>" step="1" min="0" /></td>
-	                </tr>
 	            </table>
 	            <?php submit_button(); ?>
 			</form>
@@ -76,7 +72,6 @@ EOT;
 
 	function pi_admin_init() {
 		 register_setting("pimainsettings", "pi_parenttitle");
-		 register_setting("pimainsettings", "pi_perpage");
 	}
 
 	function pi_admin_menu() {
