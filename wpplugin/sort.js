@@ -67,43 +67,43 @@ for (var i in posts) {
 //TODO Check/uncheck all
 var searchStyle = "display:inline;width:20%;margin:1em;text-align:right;white-space:nowrap;overflow-y:auto;overflow-x:hidden;";
 var asearch = "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
-asearch += "<h1 style=\"text-align:center;\">Name</h1><br/>";
-asearch += "<div class=\"textboxwrapper\" style=\"width:100\"><input id=\"tablesearchbar\" style=\"float:left;width:91%;max-height:1em;overflow-x:auto;overflow-y:hidden;display:inline;\" class=\"headerbutton\" type=\"text\" value=\"\" placeholder=\"Search\" onkeyup=\"nameSearch(event, this.value)\"/></div></div>";
+asearch += "<h1 style=\"text-align:left;\">Name</h1><br/>";
+asearch += "<div class=\"textboxwrapper\" style=\"width:100%\"><input id=\"tablesearchbar\" style=\"float:left;width:91%;max-height:1em;overflow-x:auto;overflow-y:hidden;display:inline;\" class=\"headerbutton\" type=\"text\" value=\"\" placeholder=\"Search\" onkeyup=\"nameSearch(event, this.value)\"/></div></div>";
 
 //Difficulty
 asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
-asearch += "<h1 style=\"text-align:center;\">Difficulty</h1><br/>";
+asearch += "<h1 style=\"text-align:left;float:left;display:inline;\">Difficulty</h1><input style=\"display:inline\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleDifficulty(0)\"/><br/>";
 difficulty.push(null); //Difficulty starts at one, the array starts at 0, so this pads everything out.
 for (var i = 1; i <= 5; i++) {
 	difficulty.push(true);
-	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"float:left;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleDifficulty('"+i+"')\"/></div><br/>";
+	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"float:left;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\"diff"+i+"\"type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleDifficulty('"+i+"')\"/></div><br/>";
 }
 asearch += "</div>";
 
 //Categories
 asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
-asearch += "<h1 style=\"text-align:center;\">Categories</h1><br/>";
+asearch += "<h1 style=\"text-align:left;float:left;display:inline;\">Categories</h1><input style=\"display:inline\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleCategory(null)\"/><br/>";
 for (var i in categories) {
-	var category = categories[i];
-	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"float:left;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleCategory('"+i+"')\"/></div><br/>";
+	//var category = categories[i];
+	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"float:left;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\""+i.replace(/ /g, "-")+"category\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleCategory('"+i+"')\"/></div><br/>";
 }
 asearch += "</div>";
 
 //Cells
 asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
-asearch += "<h1 style=\"text-align:center;\">Cells</h1><br/>";
+asearch += "<h1 style=\"text-align:left;float:left;display:inline;\">Cells</h1><input style=\"display:inline\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleCell(null)\"/><br/>";
 for (var i in cells) {
-	var cell = cells[i];
-	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"float:left;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input type=\"checkbox\" class=\"categorybox\" checked=\"true\" onchange=\"toggleCell('"+i+"')\"/></div><br/>";
+	//var cell = cells[i];
+	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"float:left;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\""+i.replace(/ /g, "-")+"cell\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onchange=\"toggleCell('"+i+"')\"/></div><br/>";
 }
 
 //Lids
 asearch += "</div>";
 asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
-asearch += "<h1 style=\"text-align:center;\">Lids</h1><br/>";
+asearch += "<h1 style=\"text-align:left;float:left;display:inline;\">Lids</h1><input style=\"display:inline\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleLid(null)\"/><br/>";
 for (var i in lids) {
-	var lid = lids[i];
-	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"float:left;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleLid('"+i+"')\"/></div><br/>";
+	//var lid = lids[i];
+	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"float:left;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\""+i.replace(/ /g, "-")+"lid\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleLid('"+i+"')\"/></div><br/>";
 }
 asearch += "</div>";
 advsearch.innerHTML += asearch;
@@ -323,24 +323,84 @@ function nameSearch(key, text) {
 }
 
 //Called by the lid checkboxes on click
+var lidAll = true;
 function toggleLid(name) {
-	lids[name] = !lids[name];
+	if (name) {
+		lids[name] = !lids[name];
+	} else {
+		lidAll = !lidAll;
+		for (var i in lids) {
+			lids[i] = lidAll;
+			console.log(i.replace(/ /g, "-")+"lid");
+			if (lidAll){
+				document.getElementById(i.replace(/ /g, "-")+"lid").checked = lidAll;
+			} else {
+				document.getElementById(i.replace(/ /g, "-")+"lid").checked = null;
+			}
+		}
+	}
 	nameSearch({"key": " "}, bar.value);
 }
 
+//Called by the difficulty checkboxes on click
+var diffAll = true;
 function toggleDifficulty(num) {
-	difficulty[num] = !difficulty[num];
+	if (num === 0) {
+		console.log("0");
+		diffAll = !diffAll;
+		var newVal;
+		if (diffAll) {
+			newVal = diffAll;
+		}
+		for (var i = 1; i <= 5; i++) {
+			document.getElementById("diff"+i).checked = newVal;
+			if (newVal){
+				difficulty[i] = true;
+			} else {
+				difficulty[i] = false;
+			}
+		}
+	} else {
+		difficulty[num] = !difficulty[num];
+	}
 	nameSearch({"key": " "}, bar.value);
 }
+
 //Called by the categories checkboxes on click
+var categoryAll = true;
 function toggleCategory(name) {
-	categories[name] = !categories[name];
+	if (name){
+		categories[name] = !categories[name];
+	} else {
+		categoryAll = !categoryAll;
+		for (var i in categories) {
+			categories[i] = categoryAll;
+			if (categoryAll){
+				document.getElementById(i.replace(/ /g, "-")+"category").checked = categoryAll;
+			} else {
+				document.getElementById(i.replace(/ /g, "-")+"category").checked = null;
+			}
+		}
+	}
 	nameSearch({"key": " "}, bar.value);
 }
 
 //Called by the cell checkboxes on click
+var cellAll = true;
 function toggleCell(name) {
-	cells[name] = !cells[name];
+	if (name) {
+		cells[name] = !cells[name];
+	} else {
+		cellAll = !cellAll;
+		for (var i in cells){
+			cells[i] = cellAll;
+			if (cellAll){
+				document.getElementById(i.replace(/ /g, "-")+"cell").checked = cellAll;
+			} else {
+				document.getElementById(i.replace(/ /g, "-")+"cell").checked = null;
+			}
+		}
+	}
 	nameSearch({"key": " "}, bar.value);
 }
 
@@ -352,6 +412,7 @@ function setPageLength(len) {
 
 //Expand descriptions
 var last;
+var lastOrig;
 function toggleDesc(event, id, orig) {
 	var cur = document.getElementById(id);
 	if (cur && !event.target.href) {
@@ -373,11 +434,12 @@ function toggleDesc(event, id, orig) {
 			if (old) {
 				old.classList.remove("descout");
 				old.classList.add("descin");
-				old.lastChild.lastChild.classList.remove("up");
-				old.lastChild.lastChild.classList.add("down");
+				lastOrig.lastChild.lastChild.classList.remove("up");
+				lastOrig.lastChild.lastChild.classList.add("down");
 			}
 		}
 		last = id;
+		lastOrig = orig;
 	}
 }
 
