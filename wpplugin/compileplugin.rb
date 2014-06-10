@@ -16,3 +16,6 @@ end
 compiled = File.new localdir+"/projectindex.compiled.php", "w"
 compiled.write php[/.+<EOT/m]+"\n"+js+"\n"+php[/EOT;\n.+/m] #Insert javascript into php
 compiled.close
+compiled = File.new "/var/www/html/wp-content/plugins/projectindexer.php", "w"
+compiled.write php[/.+<EOT/m]+"\n"+js+"\n"+php[/EOT;\n.+/m] #Insert javascript into php
+compiled.close

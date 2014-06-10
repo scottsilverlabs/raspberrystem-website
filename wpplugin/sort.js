@@ -7,18 +7,19 @@
 var pageLength = 10;
 var sortedPosts = [];
 var matchedPosts = posts.slice(0); //Used for sorting searches.
-
+var diffImage = "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSZCilIMSKaiiLs6gE0RwLWlIIBLkYsSKlRXhu1ZbGIprGrdh9BMFK-Bg";
+var rateImage = "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSZCilIMSKaiiLs6gE0RwLWlIIBLkYsSKlRXhu1ZbGIprGrdh9BMFK-Bg";
 var headerStyle = "width:16.66%;display:inline;";
 var content = document.getElementById("content").firstElementChild.firstElementChild;
 content.firstElementChild.innerHTML += "("+posts.length+")";
 content.innerHTML += "<input style=\""+headerStyle.substring(13)+"display:inline-flex;float:right;\" class=\"headerbutton\" type=\"button\" value=\"Filter\" onclick=\"toggleadv()\"/>";
-content.innerHTML += "<select style=\"display:inline-flex;float:right;\" onChange=\"setPageLength(this.value)\"><option>10</option><option>25</option><option>50</option></select>";
+content.innerHTML += "<select style=\"float:right;width:4em;\" onChange=\"setPageLength(this.value)\"><option>10</option><option>25</option><option>50</option></select>";
 content.innerHTML += "<div id=\"projectTable\" class=\"tableheader\"></div>";
 var table = document.getElementById("projectTable");
 var header = "<style> .out {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;-o-transition:0.5s;transition: .5s;height:300px;}";
 header += " .in {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;-o-transition:0.5s;transition:0.5s;height:0px;}";
 header += " .descout {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;-o-transition:0.5s;transition:0.5s;height:100%;padding-bottom:1em;padding-top:1em;}";
-header += " .descin {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;-o-transition:0.5s;transition:0.5s;height:0px;padding-bottom:0px;padding-top:0px;}";
+header += " .descin {transition:0.5s;height:0px;padding-bottom:0px;padding-top:0px;}";
 header += " .down {-webkit-transform:rotate(180deg);-moz-transform:rotate(180deg);-ms-transform:rotate(180deg)}";
 header += " .up {-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg)}</style>";
 header += "<div id=\"advsearch\" class=\"in\" style=\"width:100%;overflow:hidden;display:inline-flex;\"></div>";
@@ -47,6 +48,9 @@ for (var i in posts) {
 	if (posts[i].description) {
 		posts[i].description = posts[i].description.substring(1, posts[i].description.length); //Cut out a whitespace.
 	}
+	if (!posts[i].rating) {
+		posts[i].rating = 0;
+	}
 	categories[posts[i].category] = true;
 	var cstring = ele.cells;
 	ele.cellcount = 0;
@@ -64,7 +68,7 @@ for (var i in posts) {
 	lids[ele.lid] = true;
 }
 
-//TODO Check/uncheck all
+//Search
 var searchStyle = "display:inline;width:20%;margin:1em;text-align:right;white-space:nowrap;overflow-y:auto;overflow-x:hidden;";
 var asearch = "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
 asearch += "<h1 style=\"text-align:left;\">Name</h1><br/>";
@@ -84,7 +88,6 @@ asearch += "</div>";
 asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
 asearch += "<h1 style=\"text-align:left;float:left;display:inline;\">Categories</h1><input style=\"display:inline\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleCategory(null)\"/><br/>";
 for (var i in categories) {
-	//var category = categories[i];
 	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"float:left;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\""+i.replace(/ /g, "-")+"category\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleCategory('"+i+"')\"/></div><br/>";
 }
 asearch += "</div>";
@@ -93,7 +96,6 @@ asearch += "</div>";
 asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
 asearch += "<h1 style=\"text-align:left;float:left;display:inline;\">Cells</h1><input style=\"display:inline\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleCell(null)\"/><br/>";
 for (var i in cells) {
-	//var cell = cells[i];
 	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"float:left;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\""+i.replace(/ /g, "-")+"cell\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onchange=\"toggleCell('"+i+"')\"/></div><br/>";
 }
 
@@ -102,7 +104,6 @@ asearch += "</div>";
 asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
 asearch += "<h1 style=\"text-align:left;float:left;display:inline;\">Lids</h1><input style=\"display:inline\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleLid(null)\"/><br/>";
 for (var i in lids) {
-	//var lid = lids[i];
 	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"float:left;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\""+i.replace(/ /g, "-")+"lid\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleLid('"+i+"')\"/></div><br/>";
 }
 asearch += "</div>";
@@ -116,12 +117,17 @@ function generateEntry(optionsDict) {
 	var id = optionsDict.name.replace(/ /g, "-");
 	var html = "<div id=\""+id+"\" class=\"tableentry\" onclick=\"toggleDesc(event, this.id+'Desc', this)\" style=\"display:inline-flex;width:100%;min-height:1.3em;max-height:3.2em;text-align:left;overflow:hidden;\">";
 	html += "<div class=\"tabletext pname\" style=\""+textHolderStyle+"\"><a href=\""+optionsDict.url+"\">"+optionsDict.name+"</a></div>";
-	html += "<div class=\"tabletext pdiff\" style=\""+textHolderStyle+"\">"+optionsDict.difficulty+"</div>";
+	html += "<div class=\"tabletext pdiff\" style=\""+textHolderStyle+"\">"
+	var diff = Math.floor(optionsDict.difficulty+0.5); //Need for the averages.
+	for (var i = 1; i <= diff; i++) {
+		html += "<img src=\""+diffImage+"\" style=\"height:1em;width:1em;display:inline-flex;\"></img>";
+	}
+	html += "</div>";
 	html += "<div class=\"tabletext pdiff\" style=\""+textHolderStyle+"\">TODO</div>";
 	html += "<div class=\"tabletext pcategory\" style=\""+textHolderStyle+"\">"+optionsDict.category+"</div>";
 	html += "<div class=\"tabletext pcells\" style=\""+textHolderStyle+";\">TODO</div>";
 	html += "<div class=\"tabletext plid\" style=\""+textHolderStyle+"\">"+optionsDict.lid;
-	html += "<div class=\"tablespinner down\" style=\""+circleStyle+"\"><span style=\"vertical-align:middle;position:relative;top:-17%;\">▲</span></div></div></div>";
+	html += "<div class=\"tablespinner down\" style=\""+circleStyle+"\"><span style=\";position:relative;top:-16.5%;\">▲</span></div></div></div>";
 	if (optionsDict.description) {
 		html += "<div id=\""+id+"Desc\" class=\"tabledesc descin\" onclick=\"toggleDesc(this.id)\" style=\"display:inline-flex;width:100%;overflow:hidden;padding-left:2em;padding-right:2em;max-height:100%;min-height:0px\">";
 		html += optionsDict.description;
@@ -331,7 +337,6 @@ function toggleLid(name) {
 		lidAll = !lidAll;
 		for (var i in lids) {
 			lids[i] = lidAll;
-			console.log(i.replace(/ /g, "-")+"lid");
 			if (lidAll){
 				document.getElementById(i.replace(/ /g, "-")+"lid").checked = lidAll;
 			} else {

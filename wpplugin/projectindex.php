@@ -49,7 +49,22 @@ EOT;
 		return $content;
 	}
 
+	//This will handle posts sent by the JS side.
+	function pi_handle_post() {
+		global $wpdb;
+		if ($_POST["project"] != null) {
+			$rating = $_POST["rating"];
+			$page = $_POST["page"];
+			//Add this rating to database, linked to user
+			//Get current rating and average this in
+			//Return good
+		}
+	}
+
 	function pi_options_actual() {
+		global $wpdb;
+		$tbname = "";
+		$table = "CREATE TABLE IF NOT EXISTS ";
 		$ptitle = get_option("pi_parenttitle", "Projects");
 	    ?>
 	    <div class="wrap">
@@ -85,8 +100,15 @@ EOT;
 		array_push($links, $settings_link); 
 		return $links; 
 	}
- 
-	$plugin = plugin_basename(__FILE__); 
+
+	function pi_init_db() {
+
+	}
+
+	register_activation_hook(__FILE__, pi_init_db);
+	$plugin = plugin_basename(__FILE__);
 	add_filter("the_content", "pi_check");
+	//Action = rate_project
+	add_filter("wp_ajax_rate_project", "pi_handle_post");
 	add_action("admin_menu", "pi_admin_menu");
 	add_filter("plugin_action_links_$plugin", "pi_settingslink");
