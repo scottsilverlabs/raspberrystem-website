@@ -47,7 +47,6 @@ var lids = {};
 var cells = {};
 var difficulty = [];
 for (var i in posts) {
-	posts[i].id = parseInt(posts[i].id);
 	var ele = posts[i];
 	posts[i].category = posts[i].category.substring(1, posts[i].category.length-1); //Cut out a whitespace.
 	if (posts[i].description) {
@@ -143,7 +142,7 @@ function generateEntry(optionsDict) {
 		html += "<div class=\"tabletext prating\">Your Rating: ";
 		for (var i = 1; i <= 5; i++) {
 			//TODO leave outlines
-			html += "<img src=\""+rateImage+"\" style=\"height:1em;width:1em;display:inline-flex;\" onclick=\"rateProject('"+optionsDict+"', "+i+", this)\"></img>";
+			html += "<img src=\""+rateImage+"\" style=\"height:1em;width:1em;display:inline-flex;\" onclick=\"rateProject("+optionsDict.id+", "+i+", this)\"></img>";
 		}
 		html += "</div><br/>";
 		html += optionsDict.description;
@@ -185,18 +184,24 @@ function clearTable() {
 	etable.innerHTML = "";
 }
 
-function rateProject(dict, rating, button) {
+function rateProject(id, rating, button) {
 	if (loggedIn) {
 		jQuery.ajax({
 			type: "POST",
-			data: "&action=rate_project&project="+dict.id+"&rating="+rating,
+			data: "&action=rate_project&project="+id+"&rating="+rating,
 			url: wpurl+"/wp-admin/admin-ajax.php",
 			success: function(results) {
-				dict.rating = parseInt(results);
+				alert(results);
+				for (var i = sortedPosts.length-1; i >= 0; i--){
+					if (sortedPosts[i].id === id){
+						sortedPosts[i].rating = parseFloat(results);
+						sortedPosts[i].userrating = rating;
+						break;
+					}
+				}
+				nameSearch({"key": " "}, bar.value);
 			}
 		});
-
-		nameSearch({"key": " "}, bar.value);
 	} else {
 		var box = confirm("You need to log in to vote\\nWould you like to go to the login page?"); //double backslash because of the PHP file 
 		if (box) {

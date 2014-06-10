@@ -76,7 +76,6 @@ EOT;
 		global $wpdb;
 		$tableName = $wpdb->prefix . "pi_ratings";
 		$user = wp_get_current_user()->ID;
-		echo "Flerp";
 		if ($_POST["project"] != null && $user != 0) {
 			$rating = intval($_POST["rating"]);
 			$page = intval($_POST["project"]);
@@ -93,7 +92,7 @@ EOT;
 			$wpdb->insert($tableName, ["project" => $page, "user" => 0, "rating" => $avg]);
 			$wpdb->insert($tableName, ["project" => $page, "user" => $user, "rating" => $rating]);
 			die($avg);
-		}  
+		}
 		echo "Derp";
 		die("goto login");
 	}
