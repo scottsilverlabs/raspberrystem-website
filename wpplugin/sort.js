@@ -46,13 +46,14 @@ var lids = {};
 var cells = {};
 var difficulty = [];
 for (var i in posts) {
+	posts[i].id = parseInt(posts[i].id);
 	var ele = posts[i];
 	posts[i].category = posts[i].category.substring(1, posts[i].category.length-1); //Cut out a whitespace.
 	if (posts[i].description) {
 		posts[i].description = posts[i].description.substring(1, posts[i].description.length); //Cut out a whitespace.
 	}
 	if (!posts[i].rating) {
-		posts[i].rating = 0;
+		posts[i].rating = 1;
 	}
 	categories[posts[i].category] = true;
 	var cstring = ele.cells;
@@ -126,13 +127,24 @@ function generateEntry(optionsDict) {
 		html += "<img src=\""+diffImage+"\" style=\"height:1em;width:1em;display:inline-flex;\"></img>";
 	}
 	html += "</div>";
-	html += "<div class=\"tabletext pdiff\" style=\""+textHolderStyle+"\">TODO</div>";
+	html += "<div class=\"tabletext pdiff\" style=\""+textHolderStyle+"\">";
+	var rating = Math.floor(optionsDict.rating+0.5); //Need for the averages.
+	for (var i = 1; i <= rating; i++) {
+		html += "<img src=\""+rateImage+"\" style=\"height:1em;width:1em;display:inline-flex;\"></img>";
+	}
+	html += "</div>";
 	html += "<div class=\"tabletext pcategory\" style=\""+textHolderStyle+"\">"+optionsDict.category+"</div>";
 	html += "<div class=\"tabletext pcells\" style=\""+textHolderStyle+";\">TODO</div>";
 	html += "<div class=\"tabletext plid\" style=\""+textHolderStyle+"\">"+optionsDict.lid;
 	html += "<div class=\"tablespinner down\" style=\""+circleStyle+"\"><span style=\";position:relative;top:-16.5%;\">▲</span></div></div></div>";
 	if (optionsDict.description) {
-		html += "<div id=\""+id+"Desc\" class=\"tabledesc descin\" onclick=\"toggleDesc(this.id)\" style=\"display:inline-flex;width:100%;overflow:hidden;padding-left:2em;padding-right:2em;max-height:100%;min-height:0px\">";
+		html += "<div id=\""+id+"Desc\" class=\"tabledesc descin\" onclick=\"toggleDesc(this.id)\" style=\"width:100%;overflow:hidden;padding-left:2em;padding-right:2em;max-height:100%;min-height:0px\">";
+		html += "<div class=\"tabletext prating\">Your Rating: ";
+		for (var i = 1; i <= 5; i++) {
+			//TODO leave outlines
+			html += "<img src=\""+rateImage+"\" style=\"height:1em;width:1em;display:inline-flex;\" onclick=\"rateProject('"+optionsDict.id+"', "+i+", this)\"></img>";
+		}
+		html += "</div><br/>";
 		html += optionsDict.description;
 		html += "</div>";
 	} else { //Insert spacer
@@ -172,11 +184,11 @@ function clearTable() {
 	etable.innerHTML = "";
 }
 
-function rateProject(id, rating) {
+function rateProject(id, rating, button) {
 	jQuery.ajax({
 		type: "POST",
 		data: "&action=rate_project&project="+id+"&rating="+rating,
-		url: wpurl+"wp-admin/admin-ajax.php",
+		url: wpurl+"/wp-admin/admin-ajax.php",
 		success: function(results) {
 			alert(results);
 		}

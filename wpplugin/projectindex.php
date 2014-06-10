@@ -7,13 +7,14 @@
 	 * Author URI:  http://scottsilverlabs.com
 	 * Version:     1.0.1
 	 */
-	$dbname = $wpdb->prefix . "pi_ratings";
 	$javascript = <<<EOT
 
 EOT;
 
 	function pi_check($content) { //Prefixed to avoid collision.
 		global $javascript;
+		global $wpdb;
+		$tableName = $wpdb->prefix . "pi_ratings";
 		$pname = $pid = null;
 		$page = get_page_by_title(get_option("pi_parenttitle", "Projects"));
 		if ($page != null){
@@ -24,6 +25,7 @@ EOT;
 			$arr = []; //Storing data to pass to the JavaScript portion of the plugin
 			//http://codex.wordpress.org/Function_Reference/get_pages#Return
 			$projects = get_pages(array("child_of" => $GLOBALS["post"]->ID, "post_status" => "publish"));
+			//TODO ratings
 			foreach ($projects as $p) {
 				$c = explode("\n", $p->post_content); //For easy of use
 				$hdiff = explode(":", $c[0])[1];
@@ -35,18 +37,24 @@ EOT;
 				if (sizeof($desc) > 1) {
 					$descActual = $desc[1];
 				}
+				$rating = $wpdb->get_col("SELECT rating FROM $tableName WHERE project = $p->ID");
+				if ($rating == null) {
+					$rating = 1;
+				}
 				array_push($arr, [
 					"name" => $p->post_title,
+					"id" => $p->ID,
 					"url" => $p->guid,
 					"difficulty" => (int) $hdiff,
 					"cells" => $hw,
 					"category" => $category,
 					"lid" => $lid,
-					"description" => $descActual
+					"description" => $descActual,
+					"rating" => $rating
 				]);
 			}
 			wp_enqueue_script("jquery");
-			return "<script type=\"text/javascript\"> var posts = " . json_encode($arr) . $javascript . "</script>";
+			return "<script type=\"text/javascript\"> var wpurl = \"" . home_url() . "\";var posts = " . json_encode($arr) . $javascript . "</script>";
 		}
 		return $content;
 	}
@@ -54,15 +62,25 @@ EOT;
 	//This will handle posts sent by the JS side.
 	function pi_handle_post() {
 		global $wpdb;
-		global $dbname;
-		if ($_POST["project"] != null) {
-			$rating = $_POST["rating"];
-			$page = $_POST["page"];
-			$user = wp_get_current_user();
-			echo $user->ID;
-			//Add this rating to database, linked to user
-			//Get current rating and average this in
-			//Return good
+		global $tableName;
+		$user = wp_get_current_user()->ID;
+		if ($_POST["project"] != null && $user != 0) {
+			$rating = intval($_POST["rating"]);
+			$page = intval($_POST["page"]);
+			$sum = 0;
+			$count = 0;
+			$wpdb->delete($wpdb, ["project" => $page, "user" => $user]);
+			$res = $wpdb->get_results("SELECT * FROM $tableName WHERE project = $page;", ARRAY_A);
+			foreach ($res as $row) {
+				if ($row["user"] != 0) {
+					$count++;
+					$sum += $row["rating"];
+				}
+			}
+			$avg = doubleval(($sum + $rating)/(++$count));
+			echo $wpdb->replace($tableName, ["project" => $page, "user" => 0, "rating" => $avg]);
+		} elseif ($_POST["project"] != null) {
+			echo "goto login";
 		}
 	}
 
@@ -100,20 +118,19 @@ EOT;
 	function pi_settingslink($links) { 
 		$settings_link = "<a href=\"options-general.php?page=project_indexer_opts.php\">Settings</a>"; 
 		array_push($links, $settings_link); 
-		return $links; 
+		return $links;
 	}
 
 	function pi_init_db() {
 		global $wpdb;
-		global $dbname;
+		$dbname = $wpdb->prefix . "pi_ratings";
 		$table = "CREATE TABLE IF NOT EXISTS $dbname (
 	project int,
 	user int,
-	rating int,
+	rating double,
 	PRIMARY KEY (user)
 );";
-	require_once(ABSPATH . "wp-admin/includes/upgrade.php");
-	dbDelta($table);
+		$wpdb->query($table);
 	}
 
 	register_activation_hook(__FILE__, "pi_init_db");
