@@ -3,6 +3,7 @@
 //TODO user-defined page item number
 //TODO figure out database stuff
 
+//var wpurl = string; Wordpress base user
 //var posts = [{}, {}, ...{}]; Passed in by PHP
 var pageLength = 10;
 var sortedPosts = [];
@@ -10,11 +11,13 @@ var matchedPosts = posts.slice(0); //Used for sorting searches.
 var diffImage = "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSZCilIMSKaiiLs6gE0RwLWlIIBLkYsSKlRXhu1ZbGIprGrdh9BMFK-Bg";
 var rateImage = "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSZCilIMSKaiiLs6gE0RwLWlIIBLkYsSKlRXhu1ZbGIprGrdh9BMFK-Bg";
 var headerStyle = "width:16.66%;display:inline;";
+
 var content = document.getElementById("content").firstElementChild.firstElementChild;
 content.firstElementChild.innerHTML += "("+posts.length+")";
 content.innerHTML += "<input style=\""+headerStyle.substring(13)+"display:inline-flex;float:right;\" class=\"headerbutton\" type=\"button\" value=\"Filter\" onclick=\"toggleadv()\"/>";
 content.innerHTML += "<select style=\"float:right;width:4em;\" onChange=\"setPageLength(this.value)\"><option>10</option><option>25</option><option>50</option></select>";
 content.innerHTML += "<div id=\"projectTable\" class=\"tableheader\"></div>";
+
 var table = document.getElementById("projectTable");
 var header = "<style> .out {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;-o-transition:0.5s;transition: .5s;height:300px;}";
 header += " .in {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;-o-transition:0.5s;transition:0.5s;height:0px;}";
@@ -169,6 +172,16 @@ function clearTable() {
 	etable.innerHTML = "";
 }
 
+function rateProject(id, rating) {
+	jQuery.ajax({
+		type: "POST",
+		data: "&action=rate_project&project="+id+"&rating="+rating,
+		url: wpurl+"wp-admin/admin-ajax.php",
+		success: function(results) {
+			alert(results);
+		}
+	});
+}
 
 //Find the next lowest value, out of [1, 2, 3] findnextlow(1) would be 2
 function findnextlow(low, property, pool) {
