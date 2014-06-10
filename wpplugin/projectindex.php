@@ -89,18 +89,11 @@ EOT;
 				$sum += $row["rating"];
 			}
 			$avg = floatval(($sum + $rating)/(++$count));
-			echo "Average: $avg";
-			echo "\nPage: $page";
-			if ($wpdb->insert($tableName, ["project" => $page, "user" => 0, "rating" => $avg], ["%d", "%d", "%f"])) {
-				echo "\nInsert worked";
-			} else {
-				echo "\n$tableName, $page";
-			}
+			$wpdb->insert($tableName, ["project" => $page, "user" => 0, "rating" => $avg]);
 			$wpdb->insert($tableName, ["project" => $page, "user" => $user, "rating" => $rating]);
 			die("\nDone");
-		} elseif ($_POST["project"] != null) {
-			echo "goto login";
 		}
+		die("goto login");
 	}
 
 	function pi_options_actual() {
