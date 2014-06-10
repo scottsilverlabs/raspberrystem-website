@@ -92,7 +92,7 @@ EOT;
 			$avg = floatval(($sum + $rating)/(++$count));
 			$wpdb->insert($tableName, ["project" => $page, "user" => 0, "rating" => $avg]);
 			$wpdb->insert($tableName, ["project" => $page, "user" => $user, "rating" => $rating]);
-			die("\nDone");
+			die($avg);
 		}  
 		echo "Derp";
 		die("goto login");
