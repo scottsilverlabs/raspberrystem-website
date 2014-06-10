@@ -15,6 +15,7 @@ EOT;
 		global $javascript;
 		global $wpdb;
 		$tableName = $wpdb->prefix . "pi_ratings";
+		$eggsName = $wpdb->prefix . "pi_eggs";
 		$pname = $pid = null;
 		$page = get_page_by_title(get_option("pi_parenttitle", "Projects"));
 		if ($page != null){
@@ -25,7 +26,8 @@ EOT;
 			$arr = []; //Storing data to pass to the JavaScript portion of the plugin
 			//http://codex.wordpress.org/Function_Reference/get_pages#Return
 			$projects = get_pages(array("child_of" => $GLOBALS["post"]->ID, "post_status" => "publish"));
-			//TODO ratings
+			$user = wp_get_current_user()->ID;
+			$loggedIn = $user != 0;
 			foreach ($projects as $p) {
 				$c = explode("\n", $p->post_content); //For easy of use
 				$hdiff = explode(":", $c[0])[1];
@@ -43,6 +45,13 @@ EOT;
 				} else {
 					$rating = (float) $rating[0];
 				}
+				$userrating = null;
+				if ($loggedIn){
+					$userrating = $wpdb->get_col("SELECT rating FROM $tableName WHERE project = $p->ID AND user = $user");
+					if ($userrating != null) {
+						$userrating = (float) $userrating[0];
+					}
+				}
 				array_push($arr, [
 					"name" => $p->post_title,
 					"id" => $p->ID,
@@ -52,7 +61,8 @@ EOT;
 					"category" => $category,
 					"lid" => $lid,
 					"description" => $descActual,
-					"rating" => $rating
+					"rating" => $rating,
+					"userrating" => $userrating
 				]);
 			}
 			wp_enqueue_script("jquery");
@@ -86,7 +96,7 @@ EOT;
 			} else {
 				echo "\n$tableName, $page";
 			}
-			$wpdb->insert($tableName, ["project" => $page, "user" => $user, "rating" => $avg]);
+			$wpdb->insert($tableName, ["project" => $page, "user" => $user, "rating" => $rating]);
 			die("\nDone");
 		} elseif ($_POST["project"] != null) {
 			echo "goto login";
@@ -132,13 +142,23 @@ EOT;
 
 	function pi_init_db() {
 		global $wpdb;
-		$dbname = $wpdb->prefix . "pi_ratings";
-		$table = "CREATE TABLE IF NOT EXISTS $dbname (
+		$tableName = $wpdb->prefix . "pi_ratings";
+		$sql = "CREATE TABLE IF NOT EXISTS $tableName (
 	project int,
 	user int,
 	rating float
 );";
-		$wpdb->query($table);
+		$wpdb->query($sql);
+		$tableName = $wpdb->prefix . "pi_eggs";
+		$sql = "CREATE TABLE IF NOT EXISTS $tableName (
+	user int,
+	fordiff char[255],
+	backdiff char[255],
+	forrate char[255],
+	backrate char[255],
+	PRIMARY KEY (user)
+);";
+		$wpdb->query($sql);
 	}
 
 	register_activation_hook(__FILE__, "pi_init_db");

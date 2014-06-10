@@ -190,7 +190,12 @@ function rateProject(id, rating, button) {
 		data: "&action=rate_project&project="+id+"&rating="+rating,
 		url: wpurl+"/wp-admin/admin-ajax.php",
 		success: function(results) {
-			alert(results);
+			if (results == "goto login") {
+				var box = confirm("You need to log in to vote\\nWould you like to go to the login page?"); //double backslash because of the PHP file 
+				if (box) {
+					window.location = wpurl+"/wp-login.php";
+				}
+			}
 		}
 	});
 }
