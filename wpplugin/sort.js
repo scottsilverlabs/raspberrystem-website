@@ -3,8 +3,9 @@
 //TODO user-defined page item number
 //TODO figure out database stuff
 
+//var loggedIn = bool; Is the user logged in to wordpress
 //var wpurl = string; Wordpress base user
-//var posts = [{}, {}, ...{}]; Passed in by PHP
+//var posts = [{}, {}, ...{}];
 var pageLength = 10;
 var sortedPosts = [];
 var matchedPosts = posts.slice(0); //Used for sorting searches.
@@ -185,20 +186,21 @@ function clearTable() {
 }
 
 function rateProject(id, rating, button) {
-	jQuery.ajax({
-		type: "POST",
-		data: "&action=rate_project&project="+id+"&rating="+rating,
-		url: wpurl+"/wp-admin/admin-ajax.php",
-		success: function(results) {
-			console.log(results);
-			if (results == "goto login") {
-				var box = confirm("You need to log in to vote\\nWould you like to go to the login page?"); //double backslash because of the PHP file 
-				if (box) {
-					window.location = wpurl+"/wp-login.php";
-				}
+	if (loggedIn) {
+		jQuery.ajax({
+			type: "POST",
+			data: "&action=rate_project&project="+id+"&rating="+rating,
+			url: wpurl+"/wp-admin/admin-ajax.php",
+			success: function(results) {
+				//Update button and rating, etc.				
 			}
+		});
+	} else {
+		var box = confirm("You need to log in to vote\\nWould you like to go to the login page?"); //double backslash because of the PHP file 
+		if (box) {
+			window.location = wpurl+"/wp-login.php";
 		}
-	});
+	}
 }
 
 //Find the next lowest value, out of [1, 2, 3] findnextlow(1) would be 2

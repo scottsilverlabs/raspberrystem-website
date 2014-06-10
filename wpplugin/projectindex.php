@@ -66,7 +66,7 @@ EOT;
 				]);
 			}
 			wp_enqueue_script("jquery");
-			return "<script type=\"text/javascript\"> var wpurl = \"" . home_url() . "\";var posts = " . json_encode($arr) . $javascript . "</script>";
+			return "<script type=\"text/javascript\"> var loggedIn = " . (($loggedIn) ? "true" : "false") . ";var wpurl = \"" . home_url() . "\";var posts = " . json_encode($arr) . $javascript . "</script>";
 		}
 		return $content;
 	}
@@ -76,6 +76,7 @@ EOT;
 		global $wpdb;
 		$tableName = $wpdb->prefix . "pi_ratings";
 		$user = wp_get_current_user()->ID;
+		echo "Flerp";
 		if ($_POST["project"] != null && $user != 0) {
 			$rating = intval($_POST["rating"]);
 			$page = intval($_POST["project"]);
@@ -92,7 +93,8 @@ EOT;
 			$wpdb->insert($tableName, ["project" => $page, "user" => 0, "rating" => $avg]);
 			$wpdb->insert($tableName, ["project" => $page, "user" => $user, "rating" => $rating]);
 			die("\nDone");
-		}
+		}  
+		echo "Derp";
 		die("goto login");
 	}
 
