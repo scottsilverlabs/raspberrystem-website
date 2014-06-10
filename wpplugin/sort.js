@@ -9,7 +9,7 @@ var pageLength = 10;
 var sortedPosts = [];
 var matchedPosts = posts.slice(0); //Used for sorting searches.
 var diffImage = "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSZCilIMSKaiiLs6gE0RwLWlIIBLkYsSKlRXhu1ZbGIprGrdh9BMFK-Bg";
-var rateImage = "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSZCilIMSKaiiLs6gE0RwLWlIIBLkYsSKlRXhu1ZbGIprGrdh9BMFK-Bg";
+var rateImage = "http://icongal.com/gallery/image/144117/nintendo_star.png";
 var headerStyle = "width:16.66%;display:inline;";
 
 var content = document.getElementById("content").firstElementChild.firstElementChild;

@@ -37,9 +37,11 @@ EOT;
 				if (sizeof($desc) > 1) {
 					$descActual = $desc[1];
 				}
-				$rating = $wpdb->get_col("SELECT rating FROM $tableName WHERE project = $p->ID");
+				$rating = $wpdb->get_col("SELECT rating FROM $tableName WHERE project = $p->ID AND user = 0");
 				if ($rating == null) {
 					$rating = 1;
+				} else {
+					$rating = (float) $rating[0];
 				}
 				array_push($arr, [
 					"name" => $p->post_title,
@@ -62,23 +64,30 @@ EOT;
 	//This will handle posts sent by the JS side.
 	function pi_handle_post() {
 		global $wpdb;
-		global $tableName;
+		$tableName = $wpdb->prefix . "pi_ratings";
 		$user = wp_get_current_user()->ID;
 		if ($_POST["project"] != null && $user != 0) {
 			$rating = intval($_POST["rating"]);
-			$page = intval($_POST["page"]);
+			$page = intval($_POST["project"]);
 			$sum = 0;
 			$count = 0;
-			$wpdb->delete($wpdb, ["project" => $page, "user" => $user]);
+			$wpdb->delete($tableName, array("project" => $page, "user" => $user));
+			$wpdb->delete($tableName, array("project" => $page, "user" => 0));
 			$res = $wpdb->get_results("SELECT * FROM $tableName WHERE project = $page;", ARRAY_A);
 			foreach ($res as $row) {
-				if ($row["user"] != 0) {
-					$count++;
-					$sum += $row["rating"];
-				}
+				$count++;
+				$sum += $row["rating"];
 			}
-			$avg = doubleval(($sum + $rating)/(++$count));
-			echo $wpdb->replace($tableName, ["project" => $page, "user" => 0, "rating" => $avg]);
+			$avg = floatval(($sum + $rating)/(++$count));
+			echo "Average: $avg";
+			echo "\nPage: $page";
+			if ($wpdb->insert($tableName, ["project" => $page, "user" => 0, "rating" => $avg], ["%d", "%d", "%f"])) {
+				echo "\nInsert worked";
+			} else {
+				echo "\n$tableName, $page";
+			}
+			$wpdb->insert($tableName, ["project" => $page, "user" => $user, "rating" => $avg]);
+			die("\nDone");
 		} elseif ($_POST["project"] != null) {
 			echo "goto login";
 		}
@@ -127,8 +136,7 @@ EOT;
 		$table = "CREATE TABLE IF NOT EXISTS $dbname (
 	project int,
 	user int,
-	rating double,
-	PRIMARY KEY (user)
+	rating float
 );";
 		$wpdb->query($table);
 	}
