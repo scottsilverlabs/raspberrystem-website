@@ -4,7 +4,7 @@
 //var loggedIn = bool; Is the user logged in to wordpress
 //var wpurl = string; Wordpress base url
 //var posts = [{}, {}, ...{}];
-var pageLength = 10;
+var pageLength = 2;
 var sortedPosts = [];
 var matchedPosts = posts.slice(0); //Used for sorting searches.
 var defdiffImage = "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSZCilIMSKaiiLs6gE0RwLWlIIBLkYsSKlRXhu1ZbGIprGrdh9BMFK-Bg";
@@ -15,12 +15,14 @@ if (diffImage === undefined) {
 if (rateImage === undefined) {
 	rateImage = defrateImage;
 }
-var headerStyle = "width:16.66%;display:inline;";
+var headerStyle = "width:"+(100/6)+"%;display:inline;";
 
-var content = document.getElementById("content").firstElementChild.firstElementChild;
-content.firstElementChild.innerHTML += "("+posts.length+")";
-content.innerHTML += "<input style=\""+headerStyle.substring(13)+"display:inline-flex;float:right;\" class=\"headerbutton\" type=\"button\" value=\"Filter\" onclick=\"toggleadv()\"/>";
-content.innerHTML += "<select style=\"float:right;width:4em;\" onChange=\"setPageLength(this.value)\"><option>10</option><option>25</option><option>50</option></select>";
+var title = document.getElementById("content").firstElementChild.firstElementChild;
+title.firstElementChild.innerHTML += "("+posts.length+")";
+title.innerHTML += "<input style=\""+headerStyle.substring(13)+"display:inline-flex;float:right;\" class=\"headerbutton\" type=\"button\" value=\"Filter\" onclick=\"toggleadv()\"/>";
+title.innerHTML += "<select style=\"float:right;width:4em;\" onChange=\"setPageLength(this.value)\"><option>10</option><option>25</option><option>50</option></select>";
+
+var content = document.getElementById("content").firstElementChild.getElementsByTagName("div")[0];
 content.innerHTML += "<div id=\"projectTable\" class=\"tableheader\"></div>";
 
 var table = document.getElementById("projectTable");
@@ -127,27 +129,27 @@ function generateEntry(optionsDict) {
 	html += "<div class=\"tabletext pname\" style=\""+textHolderStyle+"\"><a href=\""+optionsDict.url+"\">"+optionsDict.name+"</a></div>";
 	html += "<div class=\"tabletext pdiff\" style=\""+textHolderStyle+"overflow-x:hidden;\">";
 	for (var i = 1; i <= 5; i++) {
-		html += "<img src=\""+diffImage+"\" style=\"height:1em;width:1em;display:inline-flex;\"></img>";
+		html += "<img src=\""+diffImage+"\" style=\"box-shadow:0 0px;height:1em;width:1em;display:inline-flex;\"></img>";
 	}
-	html += "<div id=\""+optionsDict.id+"DCover\" style=\"position:relative;margin-bottom:-1em;left:"+(optionsDict.difficulty)+"em;top:-1.15em;width:5em;height:1em;background-color:inherit;\"></div>";
+	html += "<div id=\""+optionsDict.id+"DCover\" style=\"position:relative;margin-bottom:-1em;left:"+(optionsDict.difficulty)+"em;top:-1.4em;width:5em;height:1em;background-color:inherit;\"></div>";
 	html += "</div>";
 	html += "<div class=\"tabletext pdiff\" style=\""+textHolderStyle+"overflow-x:hidden;\">";
 	for (var i = 1; i <= 5; i++) {
-		html += "<img src=\""+rateImage+"\" style=\"height:1em;width:1em;display:inline-flex;\"></img>";
+		html += "<img src=\""+rateImage+"\" style=\"box-shadow:0 0px;height:1em;width:1em;display:inline-flex;\"></img>";
 	}
-	html += "<div id=\""+optionsDict.id+"RCover\" style=\"position:relative;margin-bottom:-1em;left:"+(optionsDict.rating)+"em;top:-1.15em;width:5em;height:1em;background-color:inherit;\"></div>";
+	html += "<div id=\""+optionsDict.id+"RCover\" style=\"position:relative;margin-bottom:-1em;left:"+(optionsDict.rating)+"em;top:-1.4em;width:5em;height:1em;background-color:inherit;\"></div>";
 	html += "</div>";
 	html += "<div class=\"tabletext pcategory\" style=\""+textHolderStyle+"\">"+optionsDict.category+"</div>";
 	html += "<div class=\"tabletext pcells\" style=\""+textHolderStyle+";\">TODO</div>";
 	html += "<div class=\"tabletext plid\" style=\""+textHolderStyle+"\">"+optionsDict.lid;
-	html += "<div class=\"tablespinner down\" style=\""+circleStyle+"\"><span style=\";position:relative;top:-16.5%;\">▲</span></div></div></div>";
+	html += "<div class=\"tablespinner down\" style=\""+circleStyle+"\"><span style=\";position:relative;top:-45%;\">▲</span></div></div></div>";
 	html += "<div id=\""+id+"Desc\" class=\"tabledesc descin\" onclick=\"toggleDesc(this.id)\" style=\"width:100%;overflow:hidden;padding-left:2em;padding-right:2em;max-height:100%;min-height:0px\">";
 	html += "Licensed as ALv2, Copyright Scott Silver Labs, created by "+optionsDict.author;
 	html += "<div class=\"tabletext prating\"><br/>Your Rating: ";
 	for (var i = 1; i <= 5; i++) {
 		//TODO leave outlines
 		if (i != optionsDict.userrating){
-			html += "<img src=\""+rateImage+"\" style=\"height:1em;width:1em;display:inline-flex;border-radius:0.2em;\" onclick=\"rateProject("+optionsDict.id+", "+i+", this)\"></img>";
+			html += "<img src=\""+rateImage+"\" style=\"box-shadow:0 0px;height:1em;width:1em;display:inline-flex;border-radius:0.2em;\" onclick=\"rateProject("+optionsDict.id+", "+i+", this)\"></img>";
 		} else {			
 			html += "<img id=\""+optionsDict.id+"LSelection\" src=\""+rateImage+"\" style=\"height:1em;width:1em;display:inline-flex;border-radius:0.2em;background-color:#eee;\" onclick=\"rateProject("+optionsDict.id+", "+i+", this)\"></img>";
 		}
@@ -171,13 +173,14 @@ var footerButtonStyle = "position:relative;width:5%;text-align:center;white-spac
 function generateFooter(property, page) {
 	var footer = "<div class=\"tablefooter\" style=\"display:inline;width:100%;text-align:center;white-space:nowrap;\">";
 	var pagenum = false;
+	console.log(page);
 	if (page > 1) {
 		pagenum = true;
-		footer += "<input style=\""+footerButtonStyle+"left:0%;\" class=\"footerbutton\" type=\"button\" value=\"<-\" onclick=\"next(false, "+page+")\"></input>";
+		footer += "<input style=\""+footerButtonStyle+"left:0%;\" class=\"footerbutton\" type=\"button\" value=\"<-\" onclick=\"pageTo("+(page-1)+")\"></input>";
 	}
-	if (sortedPosts.length < matchedPosts.length) {
+	if (page*pageLength < matchedPosts.length) {
 		pagenum = true;
-		footer += "<input style=\""+footerButtonStyle+"left:95%;\" class=\"footerbutton\" type=\"button\" value=\"->\" onclick=\"next(true, "+page+")\" ></input>";
+		footer += "<input style=\""+footerButtonStyle+"left:95%;\" class=\"footerbutton\" type=\"button\" value=\"->\" onclick=\"pageTo("+(page+1)+")\" ></input>";
 	}
 	if (pagenum) {
 		footer += "<div style=\""+footerButtonStyle+"left:44.5%;\" class=\"footertext\">"+page+"</div>";
@@ -317,27 +320,17 @@ function sortby(property, down) {
 }
 
 //This is what is called by the buttons in the footer.
-function next(forward, page) {
-	var number;
+function pageTo(page) {
+	//console.log("Moving to"+page);
 	clearTable();
-	if (forward) {
+	while (Math.ceil(sortedPosts.length/pageLength) < page) {
 		sortby(lastProp, lastMode);
-		page++;
-	} else {
+	}
+	var number = pageLength;
+	if (pageLength*page > sortedPosts.length) {
 		number = sortedPosts.length%pageLength;
-		if (number === 0) {
-			number = pageLength;
-		}
-		for (var i = 0; i < number; i++){
-			sortedPosts.pop();
-		}
-		page--;
 	}
-	number = sortedPosts.length%pageLength; //Defining this twice is bad, clearly.
-	if (number === 0) {
-		number = pageLength;
-	}
-	for (var i = sortedPosts.length-number; i < sortedPosts.length; i++) {
+	for (var i = pageLength*(page-1); i < (pageLength*(page-1))+number; i++) {
 		generateEntry(sortedPosts[i]);
 	}
 	generateFooter(lastProp, page);
