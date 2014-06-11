@@ -189,7 +189,6 @@ function rateProject(id, rating, button) {
 			data: "&action=rate_project&project="+id+"&rating="+rating,
 			url: wpurl+"/wp-admin/admin-ajax.php",
 			success: function(results) {
-				alert(results);
 				for (var i = sortedPosts.length-1; i >= 0; i--){
 					if (sortedPosts[i].id === id){
 						sortedPosts[i].rating = parseFloat(results);
@@ -197,7 +196,8 @@ function rateProject(id, rating, button) {
 						break;
 					}
 				}
-				nameSearch({"key": " "}, bar.value);
+				var cover = document.getElementById(id+"RCover");
+				cover.style.left = results+"em";
 			}
 		});
 	} else {
