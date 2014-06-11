@@ -146,10 +146,8 @@ EOT;
 		$tableName = $wpdb->prefix . "pi_eggs";
 		$sql = "CREATE TABLE IF NOT EXISTS $tableName (
 	user int,
-	fordiff char[255],
-	backdiff char[255],
-	forrate char[255],
-	backrate char[255],
+	diff char[255],
+	rate char[255],
 	PRIMARY KEY (user)
 );";
 		$wpdb->query($sql);
@@ -158,7 +156,6 @@ EOT;
 	register_activation_hook(__FILE__, "pi_init_db");
 	$plugin = plugin_basename(__FILE__);
 	add_filter("the_content", "pi_check");
-	//Action = rate_project
 	add_filter("wp_ajax_rate_project", "pi_handle_post");
 	add_action("admin_menu", "pi_admin_menu");
 	add_filter("plugin_action_links_$plugin", "pi_settingslink");
