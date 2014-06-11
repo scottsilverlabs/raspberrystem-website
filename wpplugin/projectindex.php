@@ -93,7 +93,6 @@ EOT;
 			$wpdb->insert($tableName, ["project" => $page, "user" => $user, "rating" => $rating]);
 			die($avg);
 		}
-		echo "Derp";
 		die("goto login");
 	}
 

@@ -1,10 +1,8 @@
 //Copyright 2014 Scott Silver Labs
 //TODO lid/cell pictures.
-//TODO user-defined page item number
-//TODO figure out database stuff
 
 //var loggedIn = bool; Is the user logged in to wordpress
-//var wpurl = string; Wordpress base user
+//var wpurl = string; Wordpress base url
 //var posts = [{}, {}, ...{}];
 var pageLength = 10;
 var sortedPosts = [];
@@ -115,23 +113,23 @@ advsearch.innerHTML += asearch;
 var bar = document.getElementById("tablesearchbar");
 
 //Makes the divs holding specific projects, optionsDict being one of posts' members.
-var textHolderStyle = "width:"+(100/6)+"%;overflow-x:auto;overflow-y:hidden;max-height:inherit;text-align:inherit;";
+var textHolderStyle = "width:"+(100/6)+"%;overflow-x:auto;overflow-y:hidden;max-height:inherit;text-align:inherit;background-color:#fff;";
 var circleStyle = "float:right;width:1em;height:1em;border-radius:100%;background-color:#aaa;transition:1s;vertical-align:middle;";
 function generateEntry(optionsDict) {
 	var id = optionsDict.name.replace(/ /g, "-");
-	var html = "<div id=\""+id+"\" class=\"tableentry\" onclick=\"toggleDesc(event, this.id+'Desc', this)\" style=\"display:inline-flex;width:100%;min-height:1.3em;max-height:3.2em;text-align:left;overflow:hidden;\">";
+	var html = "<div id=\""+id+"\" class=\"tableentry\" onclick=\"toggleDesc(event, this.id+'Desc', this)\" style=\"display:inline-flex;width:100%;min-height:1.3em;max-height:3.2em;text-align:left;overflow:hidden;padding-bottom:.1em;\">";
 	html += "<div class=\"tabletext pname\" style=\""+textHolderStyle+"\"><a href=\""+optionsDict.url+"\">"+optionsDict.name+"</a></div>";
-	html += "<div class=\"tabletext pdiff\" style=\""+textHolderStyle+"\">"
-	var diff = Math.floor(optionsDict.difficulty+0.5); //Need for the averages.
-	for (var i = 1; i <= diff; i++) {
+	html += "<div class=\"tabletext pdiff\" style=\""+textHolderStyle+"overflow-x:hidden;\">";
+	for (var i = 1; i <= 5; i++) {
 		html += "<img src=\""+diffImage+"\" style=\"height:1em;width:1em;display:inline-flex;\"></img>";
 	}
+	html += "<div id=\""+optionsDict.id+"DCover\" style=\"display:inline-flex;position:relative;left:"+(optionsDict.difficulty)+"em;top:-1.1em;width:5em;height:1em;background-color:inherit;\"></div>";
 	html += "</div>";
-	html += "<div class=\"tabletext pdiff\" style=\""+textHolderStyle+"\">";
-	var rating = Math.floor(optionsDict.rating+0.5); //Need for the averages.
-	for (var i = 1; i <= rating; i++) {
+	html += "<div class=\"tabletext pdiff\" style=\""+textHolderStyle+"overflow-x:hidden;\">";
+	for (var i = 1; i <= 5; i++) {
 		html += "<img src=\""+rateImage+"\" style=\"height:1em;width:1em;display:inline-flex;\"></img>";
 	}
+	html += "<div id=\""+optionsDict.id+"RCover\" style=\"display:inline-flex;position:relative;left:"+(optionsDict.rating)+"em;top:-1.1em;width:5em;height:1em;background-color:inherit;\"></div>";
 	html += "</div>";
 	html += "<div class=\"tabletext pcategory\" style=\""+textHolderStyle+"\">"+optionsDict.category+"</div>";
 	html += "<div class=\"tabletext pcells\" style=\""+textHolderStyle+";\">TODO</div>";
@@ -236,13 +234,12 @@ function findnexthigh(high, property, pool) {
 	return low;
 }
 
-var lastProp = "name";
-var lastMode = false;
-
 /*
 	Gets the next pageLength lowest or highest(Down == true for lowest)
 	from (matchedPosts - sortedPosts) and appends them to sortedPosts.
 */
+var lastProp = "name";
+var lastMode = false;
 function sortby(property, down) {
 	var high;
 	if (property == lastProp && lastMode == down) {
