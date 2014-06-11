@@ -129,20 +129,21 @@ function generateEntry(optionsDict) {
 	for (var i = 1; i <= 5; i++) {
 		html += "<img src=\""+diffImage+"\" style=\"height:1em;width:1em;display:inline-flex;\"></img>";
 	}
-	html += "<div id=\""+optionsDict.id+"DCover\" style=\"display:inline-flex;position:relative;left:"+(optionsDict.difficulty)+"em;top:-1.15em;width:5em;height:1em;background-color:inherit;\"></div>";
+	html += "<div id=\""+optionsDict.id+"DCover\" style=\"position:relative;margin-bottom:-1em;left:"+(optionsDict.difficulty)+"em;top:-1.15em;width:5em;height:1em;background-color:inherit;\"></div>";
 	html += "</div>";
 	html += "<div class=\"tabletext pdiff\" style=\""+textHolderStyle+"overflow-x:hidden;\">";
 	for (var i = 1; i <= 5; i++) {
 		html += "<img src=\""+rateImage+"\" style=\"height:1em;width:1em;display:inline-flex;\"></img>";
 	}
-	html += "<div id=\""+optionsDict.id+"RCover\" style=\"display:inline-flex;position:relative;left:"+(optionsDict.rating)+"em;top:-1.15em;width:5em;height:1em;background-color:inherit;\"></div>";
+	html += "<div id=\""+optionsDict.id+"RCover\" style=\"position:relative;margin-bottom:-1em;left:"+(optionsDict.rating)+"em;top:-1.15em;width:5em;height:1em;background-color:inherit;\"></div>";
 	html += "</div>";
 	html += "<div class=\"tabletext pcategory\" style=\""+textHolderStyle+"\">"+optionsDict.category+"</div>";
 	html += "<div class=\"tabletext pcells\" style=\""+textHolderStyle+";\">TODO</div>";
 	html += "<div class=\"tabletext plid\" style=\""+textHolderStyle+"\">"+optionsDict.lid;
 	html += "<div class=\"tablespinner down\" style=\""+circleStyle+"\"><span style=\";position:relative;top:-16.5%;\">▲</span></div></div></div>";
 	html += "<div id=\""+id+"Desc\" class=\"tabledesc descin\" onclick=\"toggleDesc(this.id)\" style=\"width:100%;overflow:hidden;padding-left:2em;padding-right:2em;max-height:100%;min-height:0px\">";
-	html += "<div class=\"tabletext prating\">Your Rating: ";
+	html += "Licensed as ALv2, Copyright Scott Silver Labs, created by "+optionsDict.author;
+	html += "<div class=\"tabletext prating\"><br/>Your Rating: ";
 	for (var i = 1; i <= 5; i++) {
 		//TODO leave outlines
 		if (i != optionsDict.userrating){

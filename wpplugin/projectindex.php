@@ -29,9 +29,14 @@ EOT;
 			$user = wp_get_current_user()->ID;
 			$loggedIn = $user != 0;
 			foreach ($projects as $p) {
+				$author = get_user_by("id", $p->post_author);
+				$authorName = "Unknown";
+				if ($author){
+					$authorName = $author->get("first_name") . " " . $author->get("last_name");
+				}
 				$c = explode("\n", $p->post_content); //For easy of use
 				$hdiff = explode(":", $c[0])[1];
-				$hw = explode(":", $c[1])[1];				
+				$hw = explode(":", $c[1])[1];	
 				$category = explode(":", $c[2])[1];
 				$lid = explode(":", $c[3])[1];
 				$desc = explode(":", $c[4]);
@@ -62,7 +67,8 @@ EOT;
 					"lid" => $lid,
 					"description" => $descActual,
 					"rating" => $rating,
-					"userrating" => $userrating
+					"userrating" => $userrating,
+					"author" => $authorName
 				]);
 			}
 			$diff = null;
