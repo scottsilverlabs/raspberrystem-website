@@ -135,22 +135,23 @@ function generateEntry(optionsDict) {
 	html += "<div class=\"tabletext pcells\" style=\""+textHolderStyle+";\">TODO</div>";
 	html += "<div class=\"tabletext plid\" style=\""+textHolderStyle+"\">"+optionsDict.lid;
 	html += "<div class=\"tablespinner down\" style=\""+circleStyle+"\"><span style=\";position:relative;top:-16.5%;\">▲</span></div></div></div>";
-	if (optionsDict.description) {
-		html += "<div id=\""+id+"Desc\" class=\"tabledesc descin\" onclick=\"toggleDesc(this.id)\" style=\"width:100%;overflow:hidden;padding-left:2em;padding-right:2em;max-height:100%;min-height:0px\">";
-		html += "<div class=\"tabletext prating\">Your Rating: ";
-		for (var i = 1; i <= 5; i++) {
-			//TODO leave outlines
-			html += "<img src=\""+rateImage+"\" style=\"height:1em;width:1em;display:inline-flex;\" onclick=\"rateProject("+optionsDict.id+", "+i+", this)\"></img>";
+	html += "<div id=\""+id+"Desc\" class=\"tabledesc descin\" onclick=\"toggleDesc(this.id)\" style=\"width:100%;overflow:hidden;padding-left:2em;padding-right:2em;max-height:100%;min-height:0px\">";
+	html += "<div class=\"tabletext prating\">Your Rating: ";
+	for (var i = 1; i <= 5; i++) {
+		//TODO leave outlines
+		if (i != optionsDict.userrating){
+			html += "<img src=\""+rateImage+"\" style=\"height:1em;width:1em;display:inline-flex;border-radius:0.2em;\" onclick=\"rateProject("+optionsDict.id+", "+i+", this)\"></img>";
+		} else {			
+			html += "<img id=\""+optionsDict.id+"LSelection\" src=\""+rateImage+"\" style=\"height:1em;width:1em;display:inline-flex;border-radius:0.2em;background-color:#eee;\" onclick=\"rateProject("+optionsDict.id+", "+i+", this)\"></img>";
 		}
-		html += "</div><br/>";
-		html += optionsDict.description;
-		html += "</div>";
-	} else { //Insert spacer
-		html += "<div class=\"tabledesc descin\" onclick=\"toggleDesc(this.id)\" style=\"display:inline-flex;width:100%;overflow:hidden;padding-left:2em;padding-right:2em;max-height:100%;min-height:0px\"/>";
 	}
+	html += "</div><br/>";
+	html += optionsDict.description;
+	html += "</div>";
 	etable.innerHTML += html;
 }
 
+//Makes No Results Found table entry
 function noneFound() {
 	var html = "<div class=\"tablenone\" style=\"text-align:center;display:inline-flex;width:100%;min-height:18px;max-height:50px;\">";
 	html += "<h2>No Results Found</h2>";
@@ -158,6 +159,7 @@ function noneFound() {
 	etable.innerHTML += html;
 }
 
+//Makes the footer
 var footerButtonStyle = "position:relative;width:5%;text-align:center;white-space:nowrap;display:inline;";
 function generateFooter(property, page) {
 	var footer = "<div class=\"tablefooter\" style=\"display:inline;width:100%;text-align:center;white-space:nowrap;\">";
@@ -196,8 +198,14 @@ function rateProject(id, rating, button) {
 						break;
 					}
 				}
-				var cover = document.getElementById(id+"RCover");
-				cover.style.left = results+"em";
+				document.getElementById(id+"RCover").style.left = results+"em";
+				var lastSel = document.getElementById(id+"LSelection");
+				if (lastSel !== null) {
+					lastSel.id = "";
+					lastSel.style.backgroundColor = "";
+				}
+				button.id = id+"LSelection";
+				button.style.backgroundColor = "#eee";
 			}
 		});
 	} else {
