@@ -1,10 +1,11 @@
 //Copyright 2014 Scott Silver Labs
 //TODO lid/cell pictures.
+//TODO align footer, add jump buttons
 
 //var loggedIn = bool; Is the user logged in to wordpress
 //var wpurl = string; Wordpress base url
 //var posts = [{}, {}, ...{}];
-var pageLength = 2;
+var pageLength = 10;
 var sortedPosts = [];
 var matchedPosts = posts.slice(0); //Used for sorting searches.
 var defdiffImage = "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSZCilIMSKaiiLs6gE0RwLWlIIBLkYsSKlRXhu1ZbGIprGrdh9BMFK-Bg";
@@ -178,10 +179,14 @@ function generateFooter(property, page) {
 		pagenum = true;
 		footer += "<input style=\""+footerButtonStyle+"left:0%;\" class=\"footerbutton\" type=\"button\" value=\"<-\" onclick=\"pageTo("+(page-1)+")\"></input>";
 	}
+	var back = (page-5 > 1) ? page-5 : page-1;
+	//for i = back to less than page
 	if (page*pageLength < matchedPosts.length) {
 		pagenum = true;
 		footer += "<input style=\""+footerButtonStyle+"left:95%;\" class=\"footerbutton\" type=\"button\" value=\"->\" onclick=\"pageTo("+(page+1)+")\" ></input>";
 	}
+	var forward = (page+5 < Math.ceil(matchedPosts.length/pageLength)) ? page+5 : Math.ceil(matchedPosts.length/pageLength);
+	//for i = page+1 to forward
 	if (pagenum) {
 		footer += "<div style=\""+footerButtonStyle+"left:44.5%;\" class=\"footertext\">"+page+"</div>";
 	}
