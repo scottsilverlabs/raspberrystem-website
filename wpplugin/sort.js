@@ -7,8 +7,14 @@
 var pageLength = 10;
 var sortedPosts = [];
 var matchedPosts = posts.slice(0); //Used for sorting searches.
-var diffImage = "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSZCilIMSKaiiLs6gE0RwLWlIIBLkYsSKlRXhu1ZbGIprGrdh9BMFK-Bg";
-var rateImage = "http://icongal.com/gallery/image/144117/nintendo_star.png";
+var defdiffImage = "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSZCilIMSKaiiLs6gE0RwLWlIIBLkYsSKlRXhu1ZbGIprGrdh9BMFK-Bg";
+var defrateImage = "http://icongal.com/gallery/image/144117/nintendo_star.png";
+if (diffImage === undefined) {
+	diffImage = defdiffImage;
+}
+if (rateImage === undefined) {
+	rateImage = defrateImage;
+}
 var headerStyle = "width:16.66%;display:inline;";
 
 var content = document.getElementById("content").firstElementChild.firstElementChild;
@@ -123,13 +129,13 @@ function generateEntry(optionsDict) {
 	for (var i = 1; i <= 5; i++) {
 		html += "<img src=\""+diffImage+"\" style=\"height:1em;width:1em;display:inline-flex;\"></img>";
 	}
-	html += "<div id=\""+optionsDict.id+"DCover\" style=\"display:inline-flex;position:relative;left:"+(optionsDict.difficulty)+"em;top:-1.1em;width:5em;height:1em;background-color:inherit;\"></div>";
+	html += "<div id=\""+optionsDict.id+"DCover\" style=\"display:inline-flex;position:relative;left:"+(optionsDict.difficulty)+"em;top:-1.15em;width:5em;height:1em;background-color:inherit;\"></div>";
 	html += "</div>";
 	html += "<div class=\"tabletext pdiff\" style=\""+textHolderStyle+"overflow-x:hidden;\">";
 	for (var i = 1; i <= 5; i++) {
 		html += "<img src=\""+rateImage+"\" style=\"height:1em;width:1em;display:inline-flex;\"></img>";
 	}
-	html += "<div id=\""+optionsDict.id+"RCover\" style=\"display:inline-flex;position:relative;left:"+(optionsDict.rating)+"em;top:-1.1em;width:5em;height:1em;background-color:inherit;\"></div>";
+	html += "<div id=\""+optionsDict.id+"RCover\" style=\"display:inline-flex;position:relative;left:"+(optionsDict.rating)+"em;top:-1.15em;width:5em;height:1em;background-color:inherit;\"></div>";
 	html += "</div>";
 	html += "<div class=\"tabletext pcategory\" style=\""+textHolderStyle+"\">"+optionsDict.category+"</div>";
 	html += "<div class=\"tabletext pcells\" style=\""+textHolderStyle+";\">TODO</div>";
@@ -151,10 +157,10 @@ function generateEntry(optionsDict) {
 	etable.innerHTML += html;
 }
 
-//Makes No Results Found table entry
-function noneFound() {
+//Adds text to the table
+function message(content) {
 	var html = "<div class=\"tablenone\" style=\"text-align:center;display:inline-flex;width:100%;min-height:18px;max-height:50px;\">";
-	html += "<h2>No Results Found</h2>";
+	html += "<h2>"+content+"</h2>";
 	html += "</div>";
 	etable.innerHTML += html;
 }
@@ -210,6 +216,24 @@ function rateProject(id, rating, button) {
 		});
 	} else {
 		var box = confirm("You need to log in to vote\\nWould you like to go to the login page?"); //double backslash because of the PHP file 
+		if (box) {
+			window.location = wpurl+"/wp-login.php";
+		}
+	}
+}
+
+function egg(prop, img) {
+	if (loggedIn) {
+		jQuery.ajax({
+			type: "POST",
+			data: "&action=rate_project&prop="+prop+"&img="+img,
+			url: wpurl+"/wp-admin/admin-ajax.php",
+			success: function(results) {
+				alert(results);
+			}
+		});
+	} else {
+		var box = confirm("You need to log in to use easter eggs\\nWould you like to go to the login page?"); //double backslash because of the PHP file 
 		if (box) {
 			window.location = wpurl+"/wp-login.php";
 		}
@@ -348,6 +372,33 @@ function valid(tab) {
 //Function called by the search bar onKeyUp and (hackily) used to force an update by the toggle methods(Except toggleDesc) and change* functions.
 function nameSearch(key, text) {
 	char = String.fromCharCode(key.keyCode);
+	if (text.toLowerCase() == "porkchops") {
+		clearTable();
+		message("Hint:");
+		message("UPDATE pi_eggs SET diffimg = http://URL;");
+		message("UPDATE pi_eggs SET rateimg  = http://URL;");
+		message("UPDATE pi_eggs SET DEFAULT;");
+		return;
+	}
+	if (text.match(/UPDATE pi_eggs SET diffimg = .+;/) !== null) { //TODO save in SQL
+		var url = text.match(/http:\/\/.+;/)[0];
+		diffImage = url.substring(0, url.length-1);
+		egg("diff" ,diffImage);
+		bar.value = "";
+	}
+	if (text.match(/UPDATE pi_eggs SET rateimg = .+;/) !== null) { //TODO save in SQL
+		var url = text.match(/http:\/\/.+;/)[0];
+		rateImage = url.substring(0, url.length-1);
+		egg("rate" ,rateImage);
+		bar.value = "";
+	}
+	if (text.match(/UPDATE pi_eggs SET DEFAULT;/) !== null) { //TODO save in SQL
+		rateImage = defrateImage;
+		diffImage = defdiffImage;
+		egg("rate", "NULL");
+		egg("diff", "NULL");
+		bar.value = "";
+	}
 	if (char.length == 1) {
 		var newMatched = [];
 		for (var i in posts) {
@@ -368,7 +419,7 @@ function nameSearch(key, text) {
 			sortedPosts = [];
 			matchedPosts = [];
 			clearTable();
-			noneFound();
+			message("None found");
 		}
 	}
 }

@@ -65,8 +65,25 @@ EOT;
 					"userrating" => $userrating
 				]);
 			}
+			$diff = null;
+			$rate = null;
+			if ($loggedIn) {
+				$easterEggs = $wpdb->prefix . "pi_eggs";
+				$diff = $wpdb->get_var("SELECT diff FROM $easterEggs WHERE user = $user;");
+				$rate = $wpdb->get_var("SELECT rate FROM $easterEggs WHERE user = $user;");
+			}
+			if ($diff != null) {
+				$diff = "var diffImage = \"" . $diff . "\";";
+			} else {
+				$diff = "var diffImage;";
+			}
+			if ($rate != null) {
+				$rate = "var rateImage = \"" . $rate . "\";";
+			} else {
+				$rate = "var rateImage;";
+			}
 			wp_enqueue_script("jquery");
-			return "<script type=\"text/javascript\"> var loggedIn = " . (($loggedIn) ? "true" : "false") . ";var wpurl = \"" . home_url() . "\";var posts = " . json_encode($arr) . $javascript . "</script>";
+			return "<script type=\"text/javascript\"> " . $diff . $rate . " var loggedIn = " . (($loggedIn) ? "true" : "false") . ";var wpurl = \"" . home_url() . "\";var posts = " . json_encode($arr) . $javascript . "</script>";
 		}
 		return $content;
 	}
@@ -92,6 +109,18 @@ EOT;
 			$wpdb->insert($tableName, ["project" => $page, "user" => 0, "rating" => $avg]);
 			$wpdb->insert($tableName, ["project" => $page, "user" => $user, "rating" => $rating]);
 			die($avg);
+		}
+		if ($_POST["prop"] != null && $user != 0) {
+			if ($_POST["img"] == "NULL") {
+				$_POST["img"] = null;
+			}
+			$tableName = $wpdb->prefix . "pi_eggs";
+			if ($wpdb->get_var("SELECT COUNT(1) FROM $tableName WHERE user = $user;") == 0) {
+				$wpdb->insert($tableName, ["user" => $user, $_POST["prop"] => $_POST["img"]]);
+			} else {
+				$wpdb->update($tableName, [$_POST["prop"] => $_POST["img"]], ["user" => $user]);
+			}
+			die("good");
 		}
 		die("goto login");
 	}
@@ -145,8 +174,8 @@ EOT;
 		$tableName = $wpdb->prefix . "pi_eggs";
 		$sql = "CREATE TABLE IF NOT EXISTS $tableName (
 	user int,
-	diff char[255],
-	rate char[255],
+	diff char(255),
+	rate char(255),
 	PRIMARY KEY (user)
 );";
 		$wpdb->query($sql);
