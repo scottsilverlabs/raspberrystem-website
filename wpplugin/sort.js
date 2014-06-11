@@ -82,7 +82,7 @@ for (var i in posts) {
 var searchStyle = "display:inline;width:20%;margin:1em;white-space:nowrap;overflow-y:auto;overflow-x:hidden;";
 var asearch = "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
 asearch += "<h5 style=\"text-align:left;display:inline;\">Name</h5><br/>";
-asearch += "<div class=\"textboxwrapper\" style=\"width:100%\"><input id=\"tablesearchbar\" style=\"float:left;width:91%;max-height:1em;overflow-x:auto;overflow-y:hidden;display:inline;\" class=\"headerbutton\" type=\"text\" value=\"\" placeholder=\"Search\" onkeyup=\"nameSearch(event, this.value)\"/></div></div>";
+asearch += "<div class=\"textboxwrapper\" style=\"width:100%\"><input id=\"tablesearchbar\" style=\"float:left;width:86%;max-height:1em;overflow-x:auto;overflow-y:hidden;display:inline;\" class=\"headerbutton\" type=\"text\" value=\"\" placeholder=\"Search\" onkeyup=\"nameSearch(event, this.value)\"/></div></div>";
 
 //Difficulty
 asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
@@ -90,7 +90,7 @@ asearch += "<h5 style=\"text-align:left;display:inline;\">Difficulty</h5><input 
 difficulty.push(null); //Difficulty starts at one, the array starts at 0, so this pads everything out.
 for (var i = 1; i <= 5; i++) {
 	difficulty.push(true);
-	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"float:left;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\"diff"+i+"\"type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleDifficulty('"+i+"')\"/></div><br/>";
+	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"display:inline-flex;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\"diff"+i+"\"type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleDifficulty('"+i+"')\"/></div><br/>";
 }
 asearch += "</div>";
 
@@ -98,7 +98,7 @@ asearch += "</div>";
 asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
 asearch += "<h5 style=\"text-align:left;display:inline;\">Categories</h5><input style=\"display:inline;float:right;\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleCategory(null)\"/><br/>";
 for (var i in categories) {
-	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"float:left;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\""+i.replace(/ /g, "-")+"category\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleCategory('"+i+"')\"/></div><br/>";
+	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"display:inline-flex;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\""+i.replace(/ /g, "-")+"category\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleCategory('"+i+"')\"/></div><br/>";
 }
 asearch += "</div>";
 
@@ -106,7 +106,7 @@ asearch += "</div>";
 asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
 asearch += "<h5 style=\"text-align:left;display:inline;\">Cells</h5><input style=\"display:inline;float:right;\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleCell(null)\"/><br/>";
 for (var i in cells) {
-	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"float:left;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\""+i.replace(/ /g, "-")+"cell\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onchange=\"toggleCell('"+i+"')\"/></div><br/>";
+	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"display:inline-flex;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\""+i.replace(/ /g, "-")+"cell\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onchange=\"toggleCell('"+i+"')\"/></div><br/>";
 }
 
 //Lids
@@ -114,7 +114,7 @@ asearch += "</div>";
 asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
 asearch += "<h5 style=\"text-align:left;display:inline;\">Lids</h5><input style=\"display:inline;float:right;\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleLid(null)\"/><br/>";
 for (var i in lids) {
-	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"float:left;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\""+i.replace(/ /g, "-")+"lid\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleLid('"+i+"')\"/></div><br/>";
+	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"display:inline-flex;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\""+i.replace(/ /g, "-")+"lid\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleLid('"+i+"')\"/></div><br/>";
 }
 asearch += "</div>";
 advsearch.innerHTML += asearch;
