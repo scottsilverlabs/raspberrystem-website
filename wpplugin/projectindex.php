@@ -26,6 +26,11 @@ EOT;
 			$arr = []; //Storing data to pass to the JavaScript portion of the plugin
 			//http://codex.wordpress.org/Function_Reference/get_pages#Return
 			$projects = get_pages(array("child_of" => $GLOBALS["post"]->ID, "post_status" => "publish"));
+			$docs = get_pages(array("child_of" => get_page_by_title("Documents")->ID, "post_status" => "publish"));
+			$darr = ["force" => "dictionary"];
+			foreach ($docs as $d) {
+				$darr[$d->post_title] = $d->guid;
+			}
 			$user = wp_get_current_user()->ID;
 			$loggedIn = $user != 0;
 			foreach ($projects as $p) {
@@ -89,7 +94,7 @@ EOT;
 				$rate = "var rateImage;";
 			}
 			wp_enqueue_script("jquery");
-			return "<script type=\"text/javascript\"> " . $diff . $rate . " var loggedIn = " . (($loggedIn) ? "true" : "false") . ";var wpurl = \"" . home_url() . "\";var posts = " . json_encode($arr) . $javascript . "</script>";
+			return "<script type=\"text/javascript\"> " . $diff . $rate . " var loggedIn = " . (($loggedIn) ? "true" : "false") . ";var wpurl = \"" . home_url() . "\";var posts = " . json_encode($arr) . "; var cellurls = " . json_encode($darr) . ";" . $javascript . "</script>";
 		}
 		return $content;
 	}

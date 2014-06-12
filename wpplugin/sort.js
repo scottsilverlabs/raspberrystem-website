@@ -2,6 +2,7 @@
 //TODO lid/cell pictures.
 //TODO align footer, add jump buttons
 
+//var cellurls = [{}]; URLs to cell documentation
 //var loggedIn = bool; Is the user logged in to wordpress
 //var wpurl = string; Wordpress base url
 //var posts = [{}, {}, ...{}];
@@ -53,6 +54,7 @@ var categories = {};
 var lids = {};
 var cells = {};
 var difficulty = [];
+var rating = [];
 for (var i in posts) {
 	var ele = posts[i];
 	posts[i].category = posts[i].category.substring(1, posts[i].category.length-1); //Cut out a whitespace.
@@ -92,6 +94,16 @@ difficulty.push(null); //Difficulty starts at one, the array starts at 0, so thi
 for (var i = 1; i <= 5; i++) {
 	difficulty.push(true);
 	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"display:inline-flex;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\"diff"+i+"\"type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleDifficulty('"+i+"')\"/></div><br/>";
+}
+asearch += "</div>";
+
+//Rating
+asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
+asearch += "<h5 style=\"text-align:left;display:inline;\">Rating</h5><input style=\"display:inline;float:right;\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleRating(0)\"/><br/>";
+rating.push(null); //Difficulty starts at one, the array starts at 0, so this pads everything out.
+for (var i = 1; i <= 5; i++) {
+	rating.push(true);
+	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"display:inline-flex;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\"diff"+i+"\"type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleRating('"+i+"')\"/></div><br/>";
 }
 asearch += "</div>";
 
@@ -141,10 +153,17 @@ function generateEntry(optionsDict) {
 	html += "<div id=\""+optionsDict.id+"RCover\" style=\"position:relative;margin-bottom:-1em;left:"+(optionsDict.rating)+"em;top:-1.4em;width:5em;height:1em;background-color:inherit;\"></div>";
 	html += "</div>";
 	html += "<div class=\"tabletext pcategory\" style=\""+textHolderStyle+"\">"+optionsDict.category+"</div>";
-	html += "<div class=\"tabletext pcells\" style=\""+textHolderStyle+";\">TODO</div>";
-	html += "<div class=\"tabletext plid\" style=\""+textHolderStyle+"\">"+optionsDict.lid;
+	html += "<div class=\"tabletext pcells\" style=\""+textHolderStyle+";\">";
+	for (var i in optionsDict.cells) {
+		html += "<a href=\""+cellurls[i]+"\" style=\"display:inline\">";
+		html += "<img style=\"width:1em;height:1em;\" src=\""+wpurl+"/cellicons/"+i.toLowerCase().replace(/ /g, "-")+".png\"></img></a>";
+	}
+	html += "</div>";
+	html += "<div class=\"tabletext plid\" style=\""+textHolderStyle+"\">";
+	html += "<a href=\""+cellurls[optionsDict.lid]+"\" style=\"display:inline\">";
+	html += "<img style=\"width:1em;height:1em;\" src=\""+wpurl+"/cellicons/"+optionsDict.lid.toLowerCase().replace(/ /g, "-")+".png\"></img></a>";
 	html += "<div class=\"tablespinner down\" style=\""+circleStyle+"\"><span style=\";position:relative;top:-45%;\">▲</span></div></div></div>";
-	html += "<div id=\""+id+"Desc\" class=\"tabledesc descin\" onclick=\"toggleDesc(this.id)\" style=\"width:100%;overflow:hidden;padding-left:2em;padding-right:2em;max-height:100%;min-height:0px\">";
+	html += "<div id=\""+id+"Desc\" class=\"tabledesc descin\" onclick=\"toggleDesc(this.id)\" style=\"width:100%;overflow:hidden;max-height:100%;min-height:0px\">";
 	html += "Licensed as ALv2, Copyright Scott Silver Labs, created by "+optionsDict.author;
 	html += "<div class=\"tabletext prating\">Your Rating: ";
 	for (var i = 1; i <= 5; i++) {
@@ -155,8 +174,16 @@ function generateEntry(optionsDict) {
 			html += "<img id=\""+optionsDict.id+"LSelection\" src=\""+rateImage+"\" style=\"height:1em;width:1em;display:inline-flex;border-radius:0.2em;background-color:#eee;\" onclick=\"rateProject("+optionsDict.id+", "+i+", this)\"></img>";
 		}
 	}
-	html += "</div><br/>";
-	html += optionsDict.description;
+	html += "</div>";
+	html += "<div>";
+	for (var i in optionsDict.cells) {
+		html += "<a href=\""+cellurls[i]+"\" style=\"padding-right:1em;\">";
+		html += "<img style=\"width:1em;height:1em;\" src=\""+wpurl+"/cellicons/"+i.toLowerCase().replace(/ /g, "-")+".png\"></img>"+i+"</a>";
+	}
+	html += "<a href=\""+cellurls[optionsDict.lid]+"\" style=\"float:right;\">";
+	html += "<img style=\"width:1em;height:1em;\" src=\""+wpurl+"/cellicons/"+optionsDict.lid.toLowerCase().replace(/ /g, "-")+".png\"></img>"+optionsDict.lid+"</a>";
+	html += "</div>";
+	html += "<br/>"+optionsDict.description;
 	html += "</div>";
 	etable.innerHTML += html;
 }
@@ -362,6 +389,7 @@ function valid(tab) {
 	good = good && lids[tab.lid];
 	good = good && categories[tab.category];
 	good = good && difficulty[Math.floor(tab.difficulty + 0.5)];
+	good = good && rating[Math.floor(tab.rating + 0.5)];
 	return good;
 }
 
@@ -459,6 +487,31 @@ function toggleDifficulty(num) {
 		}
 	} else {
 		difficulty[num] = !difficulty[num];
+	}
+	nameSearch({"key": " "}, bar.value);
+}
+
+
+//Called by the rating checkboxes on click
+var rateAll = true;
+function toggleDifficulty(num) {
+	if (num === 0) {
+		console.log("0");
+		rateAll = !rateAll;
+		var newVal;
+		if (rateAll) {
+			newVal = rateAll;
+		}
+		for (var i = 1; i <= 5; i++) {
+			document.getElementById("diff"+i).checked = newVal;
+			if (newVal){
+				rating[i] = true;
+			} else {
+				rating[i] = false;
+			}
+		}
+	} else {
+		rating[num] = !rating[num];
 	}
 	nameSearch({"key": " "}, bar.value);
 }
