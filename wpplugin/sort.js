@@ -5,7 +5,7 @@
 //var loggedIn = bool; Is the user logged in to wordpress
 //var wpurl = string; Wordpress base url
 //var posts = [{}, {}, ...{}];
-var pageLength = 10;
+var pageLength = 2;
 var sortedPosts = [];
 var matchedPosts = posts.slice(0); //Used for sorting searches.
 var defdiffImage = "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSZCilIMSKaiiLs6gE0RwLWlIIBLkYsSKlRXhu1ZbGIprGrdh9BMFK-Bg";
@@ -146,7 +146,7 @@ function generateEntry(optionsDict) {
 	html += "<div class=\"tablespinner down\" style=\""+circleStyle+"\"><span style=\";position:relative;top:-45%;\">▲</span></div></div></div>";
 	html += "<div id=\""+id+"Desc\" class=\"tabledesc descin\" onclick=\"toggleDesc(this.id)\" style=\"width:100%;overflow:hidden;padding-left:2em;padding-right:2em;max-height:100%;min-height:0px\">";
 	html += "Licensed as ALv2, Copyright Scott Silver Labs, created by "+optionsDict.author;
-	html += "<div class=\"tabletext prating\"><br/>Your Rating: ";
+	html += "<div class=\"tabletext prating\">Your Rating: ";
 	for (var i = 1; i <= 5; i++) {
 		//TODO leave outlines
 		if (i != optionsDict.userrating){
@@ -164,7 +164,7 @@ function generateEntry(optionsDict) {
 //Adds text to the table
 function message(content) {
 	var html = "<div class=\"tablenone\" style=\"text-align:center;display:inline-flex;width:100%;min-height:18px;max-height:50px;\">";
-	html += "<h2>"+content+"</h2>";
+	html += "<h4>"+content+"</h4>";
 	html += "</div>";
 	etable.innerHTML += html;
 }
@@ -172,24 +172,19 @@ function message(content) {
 //Makes the footer
 var footerButtonStyle = "position:relative;width:5%;text-align:center;white-space:nowrap;display:inline;";
 function generateFooter(property, page) {
-	var footer = "<div class=\"tablefooter\" style=\"display:inline;width:100%;text-align:center;white-space:nowrap;\">";
-	var pagenum = false;
-	console.log(page);
+	var footer = "<div class=\"tablefooter\" style=\"width:100%;text-align:center;white-space:nowrap;\">";
 	if (page > 1) {
-		pagenum = true;
-		footer += "<input style=\""+footerButtonStyle+"left:0%;\" class=\"footerbutton\" type=\"button\" value=\"<-\" onclick=\"pageTo("+(page-1)+")\"></input>";
+		footer += "<input style=\""+footerButtonStyle+"left:-42.5%;\" class=\"footerbutton\" type=\"button\" value=\"<-\" onclick=\"pageTo("+(page-1)+")\"></input>";
 	}
 	var back = (page-5 > 1) ? page-5 : page-1;
-	//for i = back to less than page
+	if (matchedPosts.length > pageLength) {
+		var num = Math.ceil(matchedPosts.length/pageLength);
+		footer += "<div style=\""+footerButtonStyle+"left:0%;\" class=\"footertext\"><input type=\"text\" value=\""+page+"\" style=\"width:"+Math.ceil((num+0.01)/10)+"em;\" onchange=\"pageTo(parseInt(this.value))\"></input> of "+num+"</div>";
+	}
 	if (page*pageLength < matchedPosts.length) {
-		pagenum = true;
-		footer += "<input style=\""+footerButtonStyle+"left:95%;\" class=\"footerbutton\" type=\"button\" value=\"->\" onclick=\"pageTo("+(page+1)+")\" ></input>";
+		footer += "<input style=\""+footerButtonStyle+"left:42.5%;\" class=\"footerbutton\" type=\"button\" value=\"->\" onclick=\"pageTo("+(page+1)+")\" ></input>";
 	}
 	var forward = (page+5 < Math.ceil(matchedPosts.length/pageLength)) ? page+5 : Math.ceil(matchedPosts.length/pageLength);
-	//for i = page+1 to forward
-	if (pagenum) {
-		footer += "<div style=\""+footerButtonStyle+"left:44.5%;\" class=\"footertext\">"+page+"</div>";
-	}
 	footer += "</div>";
 	etable.innerHTML += footer;
 }
@@ -326,6 +321,8 @@ function sortby(property, down) {
 
 //This is what is called by the buttons in the footer.
 function pageTo(page) {
+	page = Math.min(page, Math.ceil(matchedPosts.length/pageLength));
+	page = Math.max(page, 1);
 	//console.log("Moving to"+page);
 	clearTable();
 	while (Math.ceil(sortedPosts.length/pageLength) < page) {
@@ -382,13 +379,13 @@ function nameSearch(key, text) {
 	if (text.match(/UPDATE pi_eggs SET diffimg = .+;/) !== null) { //TODO save in SQL
 		var url = text.match(/http:\/\/.+;/)[0];
 		diffImage = url.substring(0, url.length-1);
-		egg("diff" ,diffImage);
+		egg("diff", diffImage);
 		bar.value = "";
 	}
 	if (text.match(/UPDATE pi_eggs SET rateimg = .+;/) !== null) { //TODO save in SQL
 		var url = text.match(/http:\/\/.+;/)[0];
 		rateImage = url.substring(0, url.length-1);
-		egg("rate" ,rateImage);
+		egg("rate", rateImage);
 		bar.value = "";
 	}
 	if (text.match(/UPDATE pi_eggs SET DEFAULT;/) !== null) { //TODO save in SQL
