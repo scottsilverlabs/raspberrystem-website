@@ -29,12 +29,12 @@ content.innerHTML += "<div id=\"projectTable\" class=\"tableheader\"></div>";
 
 var table = document.getElementById("projectTable");
 var header = "<style> .out {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;-o-transition:0.5s;transition: .5s;height:300px;}";
-header += " .in {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;-o-transition:0.5s;transition:0.5s;height:0px;}";
-header += " .descout {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;-o-transition:0.5s;transition:0.5s;height:100%;padding-bottom:1em;padding-top:1em;}";
-header += " .descin {transition:0.5s;height:0px;padding-bottom:0px;padding-top:0px;}";
-header += " .down {-webkit-transform:rotate(180deg);-moz-transform:rotate(180deg);-ms-transform:rotate(180deg)}";
-header += " .up {-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg)}";
-header += " .grey {-webkit-filter:grayscale(100%);-moz-filter:grayscale(100%);-ms-filter:grayscale(100%);-o-filter:grayscale(100%);filter:grayscale(100%);} </style>";
+header += ".in {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;-o-transition:0.5s;transition:0.5s;height:0px;}";
+header += ".descout {-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;-o-transition:0.5s;transition:0.5s;height:100%;padding-bottom:1em;padding-top:1em;}";
+header += ".descin {transition:0.5s;height:0px;padding-bottom:0px;padding-top:0px;}";
+header += ".down {-webkit-transform:rotate(180deg);-moz-transform:rotate(180deg);-ms-transform:rotate(180deg)}";
+header += ".up {-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg)}";
+header += ".gray {-webkit-filter:grayscale(100%);-moz-filter:grayscale(100%);-ms-filter:grayscale(100%);-o-filter:grayscale(100%);filter:grayscale(100%);filter:url(\\"data:image/svg+xml;utf8,<svg xmlns=\\\'http://www.w3.org/2000/svg\\\'><filter id=\\\'grayscale\\\'><feColorMatrix type=\\\'matrix\\\' values=\\\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\\\'/></filter></svg>#grayscale\\");} </style>";
 header += "<div id=\"advsearch\" class=\"in\" style=\"width:100%;overflow:hidden;display:inline-flex;\"></div>";
 header += "<div class=\"tableheader\" style=\"display:inline;width:100%;text-align:center;white-space:nowrap;\">";
 header += "<input style=\""+headerStyle+"\" class=\"headerbutton\" type=\"button\" value=\"Name\" onclick=\"psort('name')\"></input>";
@@ -137,16 +137,16 @@ var bar = document.getElementById("tablesearchbar");
 //Makes the divs holding specific projects, optionsDict being one of posts' members.
 var textHolderStyle = "width:"+(100/6)+"%;overflow-x:auto;overflow-y:hidden;max-height:inherit;text-align:inherit;background-color:#fff;";
 var circleStyle = "float:right;width:1em;height:1em;border-radius:100%;background-color:#aaa;transition:1s;vertical-align:middle;";
-var greyStyle = "width:5em;position:relative;z-index:1;max-height:1.2em;overflow:hidden";
+var grayStyle = "width:5em;position:relative;z-index:1;max-height:1.2em;overflow:hidden";
 var colorStyle = "position:relative;z-index:2;max-height:1.2em;overflow:hidden;margin-top:-1.2em;white-space:nowrap;";
 function generateEntry(optionsDict) {
 	var id = optionsDict.name.replace(/ /g, "-");
 	var html = "<div id=\""+id+"\" class=\"tableentry\" onclick=\"toggleDesc(event, this.id+'Desc', this)\" style=\"display:inline-flex;width:100%;min-height:1.3em;max-height:3.2em;text-align:left;overflow:hidden;padding-bottom:.1em;\">";
 	html += "<div class=\"tabletext pname\" style=\""+textHolderStyle+"\"><a href=\""+optionsDict.url+"\">"+optionsDict.name+"</a></div>";
 	html += "<div class=\"tabletext pdiff\" style=\""+textHolderStyle+"overflow-x:hidden;\">";
-	html += "<div style=\""+greyStyle+"\">"; //Background holder
+	html += "<div style=\""+grayStyle+"\">"; //Background holder
 	for (var i = 1; i <= 5; i++) {
-		html += "<img class=\"grey\" src=\""+diffImage+"\" style=\"box-shadow:0 0px;height:1em;width:1em;display:inline-flex;\"></img>";
+		html += "<img class=\"gray\" src=\""+diffImage+"\" style=\"box-shadow:0 0px;height:1em;width:1em;display:inline-flex;\"></img>";
 	}
 	html += "</div>";
 	html += "<div style=\"width:"+optionsDict.difficulty+"em;"+colorStyle+"\">"; //Forground holder
@@ -156,9 +156,9 @@ function generateEntry(optionsDict) {
 	html += "</div>";
 	html += "</div>";
 	html += "<div class=\"tabletext prate\" style=\""+textHolderStyle+"overflow-x:hidden;\">";
-	html += "<div style=\""+greyStyle+"\">"; //Background holder
+	html += "<div style=\""+grayStyle+"\">"; //Background holder
 	for (var i = 1; i <= 5; i++) {
-		html += "<img class=\"grey\" src=\""+rateImage+"\" style=\"box-shadow:0 0px;height:1em;width:1em;display:inline-flex;\"></img>";
+		html += "<img class=\"gray\" src=\""+rateImage+"\" style=\"box-shadow:0 0px;height:1em;width:1em;display:inline-flex;\"></img>";
 	}
 	html += "</div>";
 	html += "<div id=\""+optionsDict.id+"RCover\" style=\"width:"+optionsDict.rating+"em;"+colorStyle+"\">"; //Forground holder
@@ -182,9 +182,9 @@ function generateEntry(optionsDict) {
 	html += "Licensed as ALv2, Copyright Scott Silver Labs, created by "+optionsDict.author;
 	html += "<div class=\"tabletext prating\">Your Rating: ";
 
-	html += "<div style=\""+greyStyle+"\">"; //Background holder
+	html += "<div style=\""+grayStyle+"\">"; //Background holder
 	for (var i = 1; i <= 5; i++) {
-		html += "<img class=\"grey\" src=\""+rateImage+"\" style=\"box-shadow:0 0px;height:1em;width:1em;display:inline-flex;\" onclick=\"rateProject("+optionsDict.id+", "+i+")\"></img>";
+		html += "<img class=\"gray\" src=\""+rateImage+"\" style=\"box-shadow:0 0px;height:1em;width:1em;display:inline-flex;\" onclick=\"rateProject("+optionsDict.id+", "+i+")\"></img>";
 	}
 	html += "</div>";
 	html += "<div id=\""+optionsDict.id+"UCover\" style=\"width:"+optionsDict.userrating+"em;"+colorStyle+"\">"; //Forground holder

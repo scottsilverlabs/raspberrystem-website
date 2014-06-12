@@ -5,6 +5,7 @@ require "net/http"
 localdir = File.dirname __FILE__
 php = File.open(localdir+"/projectindex.php").read
 js = File.open(localdir+"/sort.js").read
+#js[/GRAYSCALEURL/] = ''
 debug = ARGV[0] == "debug"
 if !debug
 	begin #This post request is to have a Google service compress and optimize the code.
