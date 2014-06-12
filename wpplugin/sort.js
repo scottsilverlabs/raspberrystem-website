@@ -273,7 +273,6 @@ function egg(prop, img) {
 			data: "&action=rate_project&prop="+prop+"&img="+img,
 			url: wpurl+"/wp-admin/admin-ajax.php",
 			success: function(results) {
-				alert(results);
 			}
 		});
 	} else {
