@@ -6,7 +6,7 @@
 //var loggedIn = bool; Is the user logged in to wordpress
 //var wpurl = string; Wordpress base url
 //var posts = [{}, {}, ...{}];
-var pageLength = 2;
+var pageLength = 10;
 var sortedPosts = [];
 var matchedPosts = posts.slice(0); //Used for sorting searches.
 var defdiffImage = "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSZCilIMSKaiiLs6gE0RwLWlIIBLkYsSKlRXhu1ZbGIprGrdh9BMFK-Bg";
@@ -506,7 +506,7 @@ function toggleDifficulty(num) {
 
 //Called by the rating checkboxes on click
 var rateAll = true;
-function toggleDifficulty(num) {
+function toggleRating(num) {
 	if (num === 0) {
 		console.log("0");
 		rateAll = !rateAll;
