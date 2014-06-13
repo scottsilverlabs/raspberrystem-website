@@ -1,6 +1,8 @@
 #!/bin/zsh
-user=
-password=
+echo "User:"
+read user
+echo "Password:"
+read password
 dir=www/ #Local directory to send
 host=dev.raspberrystem.com
 target=./$host/wphidden42 #Where to put it

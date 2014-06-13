@@ -1,6 +1,8 @@
 #!/bin/sh
-user=
-password=
+echo "User:"
+read user
+echo "Password:"
+read password
 host=dev.raspberrystem.com
 remotedir=./$host
 full=$(readlink -f $0)
