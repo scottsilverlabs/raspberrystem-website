@@ -1,0 +1,24 @@
+#!/bin/sh
+echo "User:"
+read user
+echo "Password:"
+read password
+host=raspberrystem.com
+remotedir=./$host
+full=$(readlink -f $0)
+full=$(dirname $full)
+cd $full
+if [ -d ./www ]; then
+	echo "Delete current backup?[y/n]"
+	read in
+	if [ $in = "y" ]; then
+		rm -rf ./www
+	fi
+fi
+touch ./downloading
+wget --no-verbose --no-parent --recursive --user=$user --password=$password ftp://$host/$remotedir
+mkdir ./www
+mv ./$host/$host/wphidden42/* ./www #Move it to a useful directory
+mv ./$host/$host/wphidden42/.htaccess ./www #Move it to a useful directory
+rm -rf ./$host/ #Delete local unused folders
+rm ./downloading
