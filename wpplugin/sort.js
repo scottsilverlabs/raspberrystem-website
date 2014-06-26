@@ -21,7 +21,7 @@ var headerStyle = "width:"+(100/6)+"%;display:inline;";
 
 var title = document.getElementById("content").firstElementChild.firstElementChild;
 title.firstElementChild.innerHTML += "("+posts.length+")";
-title.innerHTML += "<input style=\""+headerStyle.substring(13)+"display:inline-flex;float:right;\" class=\"headerbutton\" type=\"button\" value=\"Filter\" onclick=\"toggleadv()\"/>";
+title.innerHTML += "<input style=\""+headerStyle.substring(13)+"display:inline-flex;display:-webkit-inline-flex;float:right;\" class=\"headerbutton\" type=\"button\" value=\"Filter\" onclick=\"toggleadv()\"/>";
 title.innerHTML += "<select style=\"float:right;width:4em;\" onChange=\"setPageLength(this.value)\"><option>10</option><option>25</option><option>50</option></select>";
 
 var content = document.getElementById("content").firstElementChild.getElementsByTagName("div")[0];
@@ -35,7 +35,7 @@ header += ".descin {transition:0.5s;height:0px;padding-bottom:0px;padding-top:0p
 header += ".down {-webkit-transform:rotate(180deg);-moz-transform:rotate(180deg);-ms-transform:rotate(180deg)}";
 header += ".up {-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg)}";
 header += ".gray {-webkit-filter:grayscale(100%);-moz-filter:grayscale(100%);-ms-filter:grayscale(100%);-o-filter:grayscale(100%);filter:grayscale(100%);filter:url(GRAYSCALEURL);} </style>";
-header += "<div id=\"advsearch\" class=\"in\" style=\"width:100%;overflow:hidden;display:inline-flex;\"></div>";
+header += "<div id=\"advsearch\" class=\"in\" style=\"width:100%;overflow:hidden;display:inline-flex;display:-webkit-inline-flex;\"></div>";
 header += "<div class=\"tableheader\" style=\"display:inline;width:100%;text-align:center;white-space:nowrap;\">";
 header += "<input style=\""+headerStyle+"\" class=\"headerbutton\" type=\"button\" value=\"Name\" onclick=\"psort('name')\"></input>";
 header += "<input style=\""+headerStyle+"\" class=\"headerbutton\" type=\"button\" value=\"Difficulty\" onclick=\"psort('difficulty')\"></input>";
@@ -94,7 +94,7 @@ asearch += "<h5 style=\"text-align:left;display:inline;\">Difficulty</h5><input 
 difficulty.push(null); //Difficulty starts at one, the array starts at 0, so this pads everything out.
 for (var i = 1; i <= 5; i++) {
 	difficulty.push(true);
-	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"display:inline-flex;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\"diff"+i+"\"type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleDifficulty('"+i+"')\"/></div><br/>";
+	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"display:inline-flex;display:-webkit-inline-flex;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\"diff"+i+"\"type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleDifficulty('"+i+"')\"/></div><br/>";
 }
 asearch += "</div>";
 
@@ -104,7 +104,7 @@ asearch += "<h5 style=\"text-align:left;display:inline;\">Rating</h5><input styl
 rating.push(null); //Difficulty starts at one, the array starts at 0, so this pads everything out.
 for (var i = 1; i <= 5; i++) {
 	rating.push(true);
-	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"display:inline-flex;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\"diff"+i+"\"type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleRating('"+i+"')\"/></div><br/>";
+	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"display:inline-flex;display:-webkit-inline-flex;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\"diff"+i+"\"type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleRating('"+i+"')\"/></div><br/>";
 }
 asearch += "</div>";
 
@@ -112,7 +112,7 @@ asearch += "</div>";
 asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
 asearch += "<h5 style=\"text-align:left;display:inline;\">Categories</h5><input style=\"display:inline;float:right;\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleCategory(null)\"/><br/>";
 for (var i in categories) {
-	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"display:inline-flex;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\""+i.replace(/ /g, "-")+"category\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleCategory('"+i+"')\"/></div><br/>";
+	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"display:inline-flex;display:-webkit-inline-flex;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\""+i.replace(/ /g, "-")+"category\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleCategory('"+i+"')\"/></div><br/>";
 }
 asearch += "</div>";
 
@@ -120,7 +120,7 @@ asearch += "</div>";
 asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
 asearch += "<h5 style=\"text-align:left;display:inline;\">Cells</h5><input style=\"display:inline;float:right;\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleCell(null)\"/><br/>";
 for (var i in cells) {
-	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"display:inline-flex;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\""+i.replace(/ /g, "-")+"cell\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onchange=\"toggleCell('"+i+"')\"/></div><br/>";
+	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"display:inline-flex;display:-webkit-inline-flex;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\""+i.replace(/ /g, "-")+"cell\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onchange=\"toggleCell('"+i+"')\"/></div><br/>";
 }
 
 //Lids
@@ -128,7 +128,7 @@ asearch += "</div>";
 asearch += "<div class=\"searchcontainer\" style=\""+searchStyle+"\">";
 asearch += "<h5 style=\"text-align:left;display:inline;\">Lids</h5><input style=\"display:inline;float:right;\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleLid(null)\"/><br/>";
 for (var i in lids) {
-	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"display:inline-flex;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\""+i.replace(/ /g, "-")+"lid\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleLid('"+i+"')\"/></div><br/>";
+	asearch += "<div style=\"display:inline;width:100%;padding-bottom:0.05em;max-height:3em;\" class=\"searchcontainerentry\"><div style=\"display:inline-flex;display:-webkit-inline-flex;text-align:left;width:80%;overflow-x:auto;overflow-y:hidden;\">"+i+"</div><input id=\""+i.replace(/ /g, "-")+"lid\" type=\"checkbox\" class=\"categorybox\" checked=\"true\" onclick=\"toggleLid('"+i+"')\"/></div><br/>";
 }
 asearch += "</div>";
 advsearch.innerHTML += asearch;
@@ -141,12 +141,12 @@ var grayStyle = "width:5em;position:relative;z-index:1;max-height:1.2em;overflow
 var colorStyle = "position:relative;z-index:2;max-height:1.2em;overflow:hidden;margin-top:-1.2em;white-space:nowrap;";
 function generateEntry(optionsDict) {
 	var id = optionsDict.name.replace(/ /g, "-");
-	var html = "<div id=\""+id+"\" class=\"tableentry\" onclick=\"toggleDesc(event, this.id+'Desc', this)\" style=\"display:inline-flex;width:100%;min-height:1.3em;max-height:3.2em;text-align:left;overflow:hidden;padding-bottom:.1em;\">";
+	var html = "<div id=\""+id+"\" class=\"tableentry\" onclick=\"toggleDesc(event, this.id+'Desc', this)\" style=\"display:inline-flex;display:-webkit-inline-flex;width:100%;min-height:1.3em;max-height:3.2em;text-align:left;overflow:hidden;padding-bottom:.1em;\">";
 	html += "<div class=\"tabletext pname\" style=\""+textHolderStyle+"\"><a href=\""+optionsDict.url+"\">"+optionsDict.name+"</a></div>";
 	html += "<div class=\"tabletext pdiff\" style=\""+textHolderStyle+"overflow-x:hidden;\">";
 	html += "<div style=\""+grayStyle+"\">"; //Background holder
 	for (var i = 1; i <= 5; i++) {
-		html += "<img class=\"gray\" src=\""+diffImage+"\" style=\"box-shadow:0 0px;height:1em;width:1em;display:inline-flex;\"></img>";
+		html += "<img class=\"gray\" src=\""+diffImage+"\" style=\"box-shadow:0 0px;height:1em;width:1em;display:inline-flex;display:-webkit-inline-flex;\"></img>";
 	}
 	html += "</div>";
 	html += "<div style=\"width:"+optionsDict.difficulty+"em;"+colorStyle+"\">"; //Forground holder
@@ -158,12 +158,12 @@ function generateEntry(optionsDict) {
 	html += "<div class=\"tabletext prate\" style=\""+textHolderStyle+"overflow-x:hidden;\">";
 	html += "<div style=\""+grayStyle+"\">"; //Background holder
 	for (var i = 1; i <= 5; i++) {
-		html += "<img class=\"gray\" src=\""+rateImage+"\" style=\"box-shadow:0 0px;height:1em;width:1em;display:inline-flex;\"></img>";
+		html += "<img class=\"gray\" src=\""+rateImage+"\" style=\"box-shadow:0 0px;height:1em;width:1em;display:inline-flex;display:-webkit-inline-flex;\"></img>";
 	}
 	html += "</div>";
 	html += "<div id=\""+optionsDict.id+"RCover\" style=\"width:"+optionsDict.rating+"em;"+colorStyle+"\">"; //Forground holder
 	for (var i = 1; i <= 5; i++) {
-		html += "<img src=\""+rateImage+"\" style=\"box-shadow:0 0px;height:1em;width:1em;display:inline-flex;\"></img>";
+		html += "<img src=\""+rateImage+"\" style=\"box-shadow:0 0px;height:1em;width:1em;display:inline-flex;display:-webkit-inline-flex;\"></img>";
 	}
 	html += "</div>";
 	html += "</div>";
@@ -184,7 +184,7 @@ function generateEntry(optionsDict) {
 
 	html += "<div style=\""+grayStyle+"\">"; //Background holder
 	for (var i = 1; i <= 5; i++) {
-		html += "<img class=\"gray\" src=\""+rateImage+"\" style=\"box-shadow:0 0px;height:1em;width:1em;display:inline-flex;\" onclick=\"rateProject("+optionsDict.id+", "+i+")\"></img>";
+		html += "<img class=\"gray\" src=\""+rateImage+"\" style=\"box-shadow:0 0px;height:1em;width:1em;display:inline-flex;display:-webkit-inline-flex;\" onclick=\"rateProject("+optionsDict.id+", "+i+")\"></img>";
 	}
 	html += "</div>";
 	html += "<div id=\""+optionsDict.id+"UCover\" style=\"width:"+optionsDict.userrating+"em;"+colorStyle+"\">"; //Forground holder
@@ -209,7 +209,7 @@ function generateEntry(optionsDict) {
 
 //Adds text to the table
 function message(content) {
-	var html = "<div class=\"tablenone\" style=\"text-align:center;display:inline-flex;width:100%;min-height:18px;max-height:50px;\">";
+	var html = "<div class=\"tablenone\" style=\"text-align:center;display:inline-flex;display:-webkit-inline-flex;width:100%;min-height:18px;max-height:50px;\">";
 	html += "<h4>"+content+"</h4>";
 	html += "</div>";
 	etable.innerHTML += html;
