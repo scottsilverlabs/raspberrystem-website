@@ -414,19 +414,19 @@ function nameSearch(key, text) {
 		message("UPDATE pi_eggs SET DEFAULT;");
 		return;
 	}
-	if (text.match(/UPDATE pi_eggs SET diffimg = .+;/) !== null) { //TODO save in SQL
+	 (text.match(/UPDATE pi_eggs SET diffimg = .+;/) !== null) {
 		var url = text.match(/http:\/\/.+;/)[0];
 		diffImage = url.substring(0, url.length-1);
 		egg("diff", diffImage);
 		bar.value = "";
 	}
-	if (text.match(/UPDATE pi_eggs SET rateimg = .+;/) !== null) { //TODO save in SQL
+	if (text.match(/UPDATE pi_eggs SET rateimg = .+;/) !== null) {
 		var url = text.match(/http:\/\/.+;/)[0];
 		rateImage = url.substring(0, url.length-1);
 		egg("rate", rateImage);
 		bar.value = "";
 	}
-	if (text.match(/UPDATE pi_eggs SET DEFAULT;/) !== null) { //TODO save in SQL
+	if (text.match(/UPDATE pi_eggs SET DEFAULT;/) !== null) {
 		rateImage = defrateImage;
 		diffImage = defdiffImage;
 		egg("rate", "NULL");
