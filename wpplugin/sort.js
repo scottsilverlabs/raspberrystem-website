@@ -414,7 +414,7 @@ function nameSearch(key, text) {
 		message("UPDATE pi_eggs SET DEFAULT;");
 		return;
 	}
-	 (text.match(/UPDATE pi_eggs SET diffimg = .+;/) !== null) {
+	if (text.match(/UPDATE pi_eggs SET diffimg = .+;/) !== null) {
 		var url = text.match(/http:\/\/.+;/)[0];
 		diffImage = url.substring(0, url.length-1);
 		egg("diff", diffImage);
