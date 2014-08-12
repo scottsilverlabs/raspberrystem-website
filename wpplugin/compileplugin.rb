@@ -6,14 +6,6 @@ localdir = File.dirname __FILE__
 php = File.open(localdir+"/projectindex.php").read
 js = File.open(localdir+"/sort.js").read
 js[/GRAYSCALEURL/] = '\\"data:image/svg+xml;utf8,<svg xmlns=\\\'http://www.w3.org/2000/svg\\\'><filter id=\\\'grayscale\\\'><feColorMatrix type=\\\'matrix\\\' values=\\\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\\\'/></filter></svg>#grayscale\\"'
-debug = ARGV[0] == "debug"
-if !debug
-	begin #This post request is to have a Google service compress and optimize the code.
-	compiledjs = Net::HTTP.post_form(URI.parse("http://closure-compiler.appspot.com/compile"), {"js_code" => js, "output_format" => "text", "output_info" => "compiled_code"})
-	js = compiledjs.body
-	rescue
-	end
-end
 compiled = File.new localdir+"/projectindex.compiled.php", "w"
 compiled.write php[/.+<EOT/m]+"\n"+js+"\n"+php[/EOT;\n.+/m] #Insert javascript into php
 compiled.close
