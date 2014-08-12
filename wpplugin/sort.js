@@ -1,6 +1,4 @@
 //Copyright 2014 Scott Silver Labs
-//TODO lid/cell pictures.
-//TODO align footer, add jump buttons
 
 //var cellurls = [{}]; URLs to cell documentation
 //var loggedIn = bool; Is the user logged in to wordpress
