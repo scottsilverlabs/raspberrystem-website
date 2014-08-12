@@ -3,9 +3,9 @@
 	/**
 	 * Plugin Name: Project Indexer
 	 * Description: Indexes all posts parented to a user-defined page and provides a search and sorting interface.
-	 * Author:      Scott Silver Labs
+	 * Author:	  Scott Silver Labs
 	 * Author URI:  http://scottsilverlabs.com
-	 * Version:     1.0.1
+	 * Version:	 1.0.1
 	 */
 	$javascript = <<<EOT
 
@@ -138,23 +138,23 @@ EOT;
 
 	function pi_options_actual() {
 		$ptitle = get_option("pi_parenttitle", "Projects");
-	    ?>
-	    <div class="wrap">
-	        <h2>Project Indexer</h2>
-	        <form method="post" action="options.php">
-	            <?php
-	            	settings_fields("pimainsettings");
-	            	do_settings_sections("pimainsettings");
-	            ?>
-	            <table class="form-table">
-	                <tr valign="top"><th scope="row">Projects' Parent Title:</th>
-	                    <td><input type="text" name="pi_parenttitle" value="<?php echo $ptitle; ?>" /></td>
-	                </tr>
-	            </table>
-	            <?php submit_button(); ?>
+		?>
+		<div class="wrap">
+			<h2>Project Indexer</h2>
+			<form method="post" action="options.php">
+				<?php
+					settings_fields("pimainsettings");
+					do_settings_sections("pimainsettings");
+				?>
+				<table class="form-table">
+					<tr valign="top"><th scope="row">Projects' Parent Title:</th>
+						<td><input type="text" name="pi_parenttitle" value="<?php echo $ptitle; ?>" /></td>
+					</tr>
+				</table>
+				<?php submit_button(); ?>
 			</form>
 		</div>
-	    <?php
+		<?php
 	}
 
 	function pi_admin_init() {

@@ -4,6 +4,8 @@
 //var loggedIn = bool; Is the user logged in to wordpress
 //var wpurl = string; Wordpress base url
 //var posts = [{}, {}, ...{}];
+//diffImage = uri; Injected via HTML if it is saved for the logged in user
+//rateImage = uri; Injected via HTML if it is saved for the logged in user
 var pageLength = 10;
 var sortedPosts = [];
 var matchedPosts = posts.slice(0); //Used for sorting searches.
@@ -410,7 +412,7 @@ function nameSearch(key, text) {
 		clearTable();
 		message("Hint:");
 		message("UPDATE pi_eggs SET diffimg = http://URL;");
-		message("UPDATE pi_eggs SET rateimg  = http://URL;");
+		message("UPDATE pi_eggs SET rateimg = http://URL;");
 		message("UPDATE pi_eggs SET DEFAULT;");
 		return;
 	}
