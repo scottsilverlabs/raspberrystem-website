@@ -1,0 +1,80 @@
+input.headerbutton {
+
+	background-color: #8bc53e;
+	background-image: none;
+	border-radius: 0 0 0 0;
+	border: none;
+	padding: 10px;
+	color: white;
+	font-family: 'Lato';
+	font-weight: bold;
+	font-size: 15px;
+
+}
+
+.tableentry:nth-child(even) {
+
+	background-color: #f5f5f5 !important;
+
+}
+
+.tableentry div {
+
+	background: none !important;
+
+}
+
+.tabletext.pname a {
+
+	text-decoration: none;
+	color: #666;
+	font-family: 'Lato';
+
+}
+
+.tablefooter input[type="text"] {
+
+	font-family: 'Lato';
+	font-weight: bold;
+	color: white;
+	border: 0;
+	border-radius: 0 0 0 0;
+	background-color: #8bc53e;
+
+}
+
+.footertext {
+
+	color: #666;
+	font-style: italic;
+
+}
+
+input.footerbutton {
+
+	background-image: none;
+	background-color: #8bc53e;
+	color: white;
+	border-radius: 0 0 0 0;
+	font-weight: bold;
+	font-weight: bold;
+	border: none;
+
+}
+
+header.entry-header {
+
+	font-family: 'Oswald';
+	font-size: 25px;
+	font-weight: bold;
+	text-transform: uppercase;
+	color: #8bc53e;
+
+}
+
+.entry-header select {
+
+	font-family: 'Lato';
+	font-size: 12px;
+
+}

@@ -22,7 +22,7 @@ var headerStyle = "width:"+(100/6)+"%;display:inline;";
 var title = document.getElementById("content").firstElementChild.firstElementChild;
 title.firstElementChild.innerHTML += "("+posts.length+")";
 title.innerHTML += "<input style=\""+headerStyle.substring(13)+"display:inline-flex;display:-webkit-inline-box;float:right;\" class=\"headerbutton\" type=\"button\" value=\"Filter\" onclick=\"toggleadv()\"/>";
-title.innerHTML += "<select style=\"float:right;width:4em;\" onChange=\"setPageLength(this.value)\"><option>10</option><option>25</option><option>50</option></select>";
+title.innerHTML += "<select style=\"float:right;\" onChange=\"setPageLength(this.value)\"><option>10</option><option>25</option><option>50</option></select>";
 
 var content = document.getElementById("content").firstElementChild.getElementsByTagName("div")[0];
 content.innerHTML += "<div id=\"projectTable\" class=\"tableheader\"></div>";

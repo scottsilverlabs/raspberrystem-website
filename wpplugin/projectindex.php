@@ -94,6 +94,7 @@ EOT;
 				$rate = "var rateImage;";
 			}
 			wp_enqueue_script("jquery");
+			wp_enqueue_style("projectindexer", "//dev.raspberrystem.com/wphidden42/wp-content/plugins/projectindexer/plugin.css");
 			return "<script type=\"text/javascript\"> " . $diff . $rate . " var loggedIn = " . (($loggedIn) ? "true" : "false") . ";var wpurl = \"" . home_url() . "\";var posts = " . json_encode($arr) . "; var cellurls = " . json_encode($darr) . ";" . $javascript . "</script>";
 		}
 		return $content;
